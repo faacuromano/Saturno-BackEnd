@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\SATURNO_V2.props" />
+</Project>
