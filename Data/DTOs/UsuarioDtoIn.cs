@@ -19,10 +19,6 @@ public class UsuarioDtoIn
 
     public DateTime FechaNacimiento { get; set; } 
 
-    public DateTime CreacionCuenta { get; set; } 
-
     public string? FotoPerfil { get; set; }
-
-    public string TipoCuenta { get; set; } = null!;
 
 }

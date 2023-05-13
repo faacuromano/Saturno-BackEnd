@@ -26,7 +26,7 @@ public class UsuarioService{
 
     public async Task<Usuario?> Login(string username, string password)
     {
-        var response = await _context.Usuarios.FirstOrDefaultAsync(u => u.Nombre == username && u.Pass == password);
+        var response = await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == username && u.Pass == password);
         return response;
     }
 
@@ -38,11 +38,11 @@ public class UsuarioService{
         nuevoUsuario.Apellido = usuarioNuevoDto.Apellido;
         nuevoUsuario.Mail = usuarioNuevoDto.NumTelefono;
         nuevoUsuario.FechaNacimiento = usuarioNuevoDto.FechaNacimiento;
-        nuevoUsuario.CreacionCuenta = usuarioNuevoDto.CreacionCuenta;
+        nuevoUsuario.CreacionCuenta = DateTime.Now;
         nuevoUsuario.Pass = usuarioNuevoDto.Passw;
         nuevoUsuario.NumTelefono = usuarioNuevoDto.NumTelefono;
         nuevoUsuario.FotoPerfil = usuarioNuevoDto.FotoPerfil;
-        nuevoUsuario.TipoCuenta = usuarioNuevoDto.TipoCuenta;
+        nuevoUsuario.TipoCuenta = "U";
         nuevoUsuario.Username = usuarioNuevoDto.Username;
 
         _context.Usuarios.Add(nuevoUsuario);
