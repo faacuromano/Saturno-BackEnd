@@ -4,9 +4,6 @@ using SATURNO_V2.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Load .ENV
-var env = DotNetEnv.Env.Load();
-
 // Add services to the container.
 
 builder.Services.AddControllers();

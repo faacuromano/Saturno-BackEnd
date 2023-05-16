@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\PROGRAMACION\\PROG 3\\SATURNO_V2\\SATURNO_V2.csproj": {}
+    "C:\\Users\\PC\\Desktop\\SaTurno\\Saturno-BackEnd\\SATURNO_V2.csproj": {}
   },
   "projects": {
-    "D:\\PROGRAMACION\\PROG 3\\SATURNO_V2\\SATURNO_V2.csproj": {
+    "C:\\Users\\PC\\Desktop\\SaTurno\\Saturno-BackEnd\\SATURNO_V2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\PROGRAMACION\\PROG 3\\SATURNO_V2\\SATURNO_V2.csproj",
+        "projectUniqueName": "C:\\Users\\PC\\Desktop\\SaTurno\\Saturno-BackEnd\\SATURNO_V2.csproj",
         "projectName": "SATURNO_V2",
-        "projectPath": "D:\\PROGRAMACION\\PROG 3\\SATURNO_V2\\SATURNO_V2.csproj",
-        "packagesPath": "C:\\Users\\Facundo\\.nuget\\packages\\",
-        "outputPath": "D:\\PROGRAMACION\\PROG 3\\SATURNO_V2\\obj\\",
+        "projectPath": "C:\\Users\\PC\\Desktop\\SaTurno\\Saturno-BackEnd\\SATURNO_V2.csproj",
+        "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\PC\\Desktop\\SaTurno\\Saturno-BackEnd\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Facundo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -57,6 +58,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
+            },
+            "mercadopago-sdk": {
+              "target": "Package",
+              "version": "[2.2.3, )"
             }
           },
           "imports": [
@@ -78,7 +83,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }

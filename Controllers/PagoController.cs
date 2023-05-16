@@ -9,8 +9,8 @@ namespace SATURNO_V2.Controllers;
 
 public class PagoController : ControllerBase
 {
-    private readonly ControllerService _service;
-    public PagoController(ControllerService service)
+    private readonly PagoService _service;
+    public PagoController(PagoService service)
     {
         _service = service;
     }
