@@ -7,10 +7,10 @@ namespace SATURNO_V2.Controllers;
 [ApiController]
 [Route("[controller]")]
 
-public class PaymentController : ControllerBase
+public class PagoController : ControllerBase
 {
     private readonly ControllerService _service;
-    public PaymentController(ControllerService service)
+    public PagoController(ControllerService service)
     {
         _service = service;
     }
