@@ -72,6 +72,7 @@ public class UsuarioService{
 
         if (usuarioExistente is not null)
         {
+            usuarioExistente.Id = usuario.Id;
             usuarioExistente.Nombre = usuario.Nombre;
             usuarioExistente.Apellido = usuario.Apellido;
             usuarioExistente.Mail = usuario.Mail;
