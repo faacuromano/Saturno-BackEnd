@@ -38,9 +38,24 @@ public class UsuarioController : ControllerBase
 
     }
 
-        [HttpGet]
-        [Route("login")]    
-        public async Task<ActionResult<Usuario>> Login(string username, string password)
+    [HttpGet("2/{id}")]
+    public async Task<ActionResult<UsuarioDtoOut>> GetByIdToFunction(int id)
+    {
+        var usuario = await _service.GetByIdToFunction(id);
+       
+        if (usuario is not null) 
+        { 
+            return usuario; 
+        }
+        else
+        { 
+            return NotFound();
+        }
+
+    }
+
+    [HttpGet("login")]
+    public async Task<ActionResult<Usuario>> Login(string username, string password)
     {
         var loginStatus = await _service.Login(username, password);
        
@@ -65,13 +80,10 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, Usuario usuario)
+    public async Task<IActionResult> Update(int id, UsuarioDtoOut usuario)
     {
-        if (id != usuario.Id){
-            return BadRequest();
-        }
 
-        var usuarioUpdate = await _service.GetById(id);
+        var usuarioUpdate = await _service.GetByIdToFunction(id);
 
         if (usuarioUpdate is not null )
         {
@@ -83,6 +95,7 @@ public class UsuarioController : ControllerBase
             return NotFound();
         }
     }
+
 
     [HttpDelete]
     public async Task<IActionResult> Delete(int id)

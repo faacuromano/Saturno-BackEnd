@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SATURNO_V2.Data.DTOs;
 using System.Text.Json.Serialization;
 
 namespace SATURNO_V2.Data.SaturnoModels;

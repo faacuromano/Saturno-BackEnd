@@ -24,6 +24,21 @@ public class UsuarioService{
         return  await _context.Usuarios.FindAsync(id);
     }
 
+    public async Task<UsuarioDtoOut?> GetByIdToFunction(int id)
+    {
+         return await _context.Usuarios
+        .Where(p => p.Id == id)
+        .Select(t => new UsuarioDtoOut{
+            Nombre = t.Nombre,
+            Apellido = t.Apellido,
+            Mail = t.Mail,
+            NumTelefono = t.NumTelefono,
+            FechaNacimiento = t.FechaNacimiento,
+            FotoPerfil = t.FotoPerfil,
+         })
+        .FirstOrDefaultAsync();
+    }
+
     public async Task<Usuario?> Login(string username, string password)
     {
         var response = await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == username && u.Pass == password);
@@ -51,21 +66,18 @@ public class UsuarioService{
         return nuevoUsuario;
     }
 
-    public async Task Update(int id, Usuario usuario) 
+    public async Task Update(int id, UsuarioDtoOut usuario) 
     {
         var usuarioExistente = await GetById(id);
 
         if (usuarioExistente is not null)
         {
-            usuarioExistente.Id = usuario.Id;
             usuarioExistente.Nombre = usuario.Nombre;
             usuarioExistente.Apellido = usuario.Apellido;
             usuarioExistente.Mail = usuario.Mail;
-            usuarioExistente.Pass = usuario.Pass;
             usuarioExistente.NumTelefono = usuario.NumTelefono;
             usuarioExistente.FechaNacimiento = usuario.FechaNacimiento;
             usuarioExistente.FotoPerfil = usuario.FotoPerfil;
-            usuarioExistente.TipoCuenta = usuario.TipoCuenta;
 
             await _context.SaveChangesAsync();
         }

@@ -131,7 +131,7 @@ public partial class SaturnoV2Context : DbContext
                 .IsUnicode(false)
                 .HasColumnName("nombre");
             entity.Property(e => e.Precio)
-                .HasColumnType("decimal(5, 2)")
+                .HasColumnType("decimal(7, 2)")
                 .HasColumnName("precio");
         });
 

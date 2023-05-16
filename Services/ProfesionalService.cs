@@ -24,7 +24,7 @@ public class ProfesionalService{
             Pass = t.IdUsuariosNavigation.Pass,
             NumTelefono = t.IdUsuariosNavigation.NumTelefono,
             FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento,
-            FotoPefil = t.IdUsuariosNavigation.FotoPerfil,
+            FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
             Verificado = t.IdUsuariosNavigation.Verificado,
             CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
             TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
@@ -49,7 +49,7 @@ public class ProfesionalService{
             Pass = t.IdUsuariosNavigation.Pass,
             NumTelefono = t.IdUsuariosNavigation.NumTelefono,
             FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento,
-            FotoPefil = t.IdUsuariosNavigation.FotoPerfil,
+            FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
             Verificado = t.IdUsuariosNavigation.Verificado,
             CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
             TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
@@ -69,6 +69,7 @@ public class ProfesionalService{
     {
          return  await _context.Profesionales.FindAsync(id);
     }
+    
     public async Task<ProfesionalDto?> GetById(int id)
     {
     return await _context.Profesionales
@@ -80,7 +81,7 @@ public class ProfesionalService{
             Pass = t.IdUsuariosNavigation.Pass,
             NumTelefono = t.IdUsuariosNavigation.NumTelefono,
             FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento,
-            FotoPefil = t.IdUsuariosNavigation.FotoPerfil,
+            FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
             Verificado = t.IdUsuariosNavigation.Verificado,
             CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
             TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,

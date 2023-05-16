@@ -6,6 +6,7 @@ namespace SATURNO_V2.Data.SaturnoModels;
 
 public partial class Usuario
 {
+    [JsonIgnore]
     public int Id { get; set; }
 
     public string Nombre { get; set; } = null!;
@@ -23,9 +24,11 @@ public partial class Usuario
     public DateTime FechaNacimiento { get; set; }
 
     public string?  FotoPerfil { get; set; }
-
+    
+    [JsonIgnore]
     public bool Verificado { get; set; }
     
+    [JsonIgnore]
     public DateTime CreacionCuenta { get; set; }
 
     public string TipoCuenta { get; set; } = null!;

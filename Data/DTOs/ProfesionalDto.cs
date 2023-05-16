@@ -18,7 +18,7 @@ public class ProfesionalDto
 
     public DateTime FechaNacimiento { get; set; }
 
-    public string? FotoPefil { get; set; }
+    public string? FotoPerfil { get; set; }
 
     public bool? Verificado { get; set; }
 
