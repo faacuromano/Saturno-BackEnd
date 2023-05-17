@@ -1,6 +1,9 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SATURNO_V2.Data;
 using SATURNO_V2.Data.DTOs;
 using SATURNO_V2.Data.SaturnoModels;
@@ -41,11 +44,6 @@ public class UsuarioService{
         .FirstOrDefaultAsync();
     }
 
-    public async Task<Usuario?> Login(string username, string password)
-    {
-        var response = await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == username && u.Pass == hashPassword(password));
-        return response;
-    }
 
     public async Task<Usuario?> Create(UsuarioDtoIn usuarioNuevoDto)
     {
@@ -97,6 +95,12 @@ public class UsuarioService{
         }
     }
 
+    public async Task<Usuario?> Login(string username, string password)
+    {
+        var response = await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == username && u.Pass == password);
+        return response;
+    }
+
     string hashPassword(string password)
     {
         var sha = SHA256.Create();
@@ -106,5 +110,7 @@ public class UsuarioService{
 
         return Convert.ToBase64String(hashedPassword);
     }
+
+    
 }
 
