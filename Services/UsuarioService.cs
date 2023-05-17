@@ -97,7 +97,7 @@ public class UsuarioService{
 
     public async Task<Usuario?> Login(string username, string password)
     {
-        var response = await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == username && u.Pass == password);
+        var response = await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == username && u.Pass == hashPassword(password));
         return response;
     }
 

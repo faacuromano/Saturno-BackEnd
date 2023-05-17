@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using SATURNO_V2.Data;
 using SATURNO_V2.Data.SaturnoModels;
 using SATURNO_V2.Data.DTOs;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace SATURNO_V2.Services;
 
@@ -97,6 +99,7 @@ public class ProfesionalService{
     }
     public async Task<Profesionale?> Create(Profesionale profesionalNuevo)
     {
+        profesionalNuevo.IdUsuariosNavigation.Pass = hashPassword(profesionalNuevo.IdUsuariosNavigation.Pass) ;
         _context.Profesionales.Add(profesionalNuevo);
 
         await _context.SaveChangesAsync();
@@ -129,6 +132,16 @@ public class ProfesionalService{
              _context.Profesionales.Remove(profesionalDelete);
              await _context.SaveChangesAsync();
          }
-     }
+    }
+
+        string hashPassword(string password)
+    {
+        var sha = SHA256.Create();
+
+        var asByteArray = Encoding.Default.GetBytes(password);
+        var hashedPassword = sha.ComputeHash(asByteArray);
+
+        return Convert.ToBase64String(hashedPassword);
+    }
 
 }
