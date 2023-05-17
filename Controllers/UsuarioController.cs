@@ -2,6 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using SATURNO_V2.Services;
 using SATURNO_V2.Data.SaturnoModels;
 using SATURNO_V2.Data.DTOs;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace SATURNO_V2.Controllers;
 
@@ -11,9 +15,11 @@ namespace SATURNO_V2.Controllers;
 public class UsuarioController : ControllerBase
 {
     private readonly UsuarioService _service;
-    public UsuarioController(UsuarioService service)
+    private IConfiguration config;    
+    public UsuarioController(UsuarioService service, IConfiguration config)
     {
         _service = service;
+        this.config = config;
     }
 
     [HttpGet]
@@ -57,11 +63,12 @@ public class UsuarioController : ControllerBase
     [HttpGet("login")]
     public async Task<ActionResult<Usuario>> Login(string username, string password)
     {
-        var loginStatus = await _service.Login(username, password);
+        var user = await _service.Login(username, password);
        
-        if (loginStatus is not null) 
+        if (user is not null) 
         { 
-            return loginStatus; 
+            string jwtToken = GenerateToken(user);
+            return  Ok( new {token = jwtToken, user }); 
         }
         else
         { 
@@ -111,5 +118,26 @@ public class UsuarioController : ControllerBase
         {
             return NotFound();
         }
+    }
+
+    private string GenerateToken(Usuario usuario)
+    {
+        var claims = new []
+        {
+            new Claim(ClaimTypes.Name, usuario.Username),
+            new Claim(ClaimTypes.Email, usuario.Mail)
+        };
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetSection("JWT:Key").Value));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+        var securityToken = new JwtSecurityToken(
+                            claims: claims,
+                            expires: DateTime.Now.AddMinutes(60),
+                            signingCredentials: creds);
+    
+        string token = new JwtSecurityTokenHandler().WriteToken(securityToken);
+
+        return token;
     }
 }
