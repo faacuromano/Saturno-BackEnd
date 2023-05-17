@@ -26,54 +26,55 @@ public class UsuarioController : ControllerBase
     public async Task<ActionResult<Usuario>> GetById(int id)
     {
         var usuario = await _service.GetById(id);
-       
-        if (usuario is not null) 
-        { 
-            return usuario; 
+
+        if (usuario is not null)
+        {
+            return usuario;
         }
         else
-        { 
+        {
             return NotFound();
         }
 
     }
 
-        [HttpGet]
-        [Route("login")]    
-        public async Task<ActionResult<Usuario>> Login(string username, string password)
+    [HttpGet]
+    [Route("login")]
+    public async Task<ActionResult<Usuario>> Login(string username, string password)
     {
         var loginStatus = await _service.Login(username, password);
-       
-        if (loginStatus is not null) 
-        { 
-            return loginStatus; 
+
+        if (loginStatus is not null)
+        {
+            return loginStatus;
         }
         else
-        { 
+        {
             return NotFound("Credenciales Incorrectas");
         }
-        }
+    }
 
 
-    [HttpPost]    
+    [HttpPost]
     public async Task<IActionResult> Create(UsuarioDtoIn usuario)
     {
         var usuarioNuevo = await _service.Create(usuario);
 
-        return CreatedAtAction(nameof(GetById), new {id = usuarioNuevo.Id}, usuarioNuevo);
+        return CreatedAtAction(nameof(GetById), new { id = usuarioNuevo.Id }, usuarioNuevo);
 
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, Usuario usuario)
     {
-        if (id != usuario.Id){
+        if (id != usuario.Id)
+        {
             return BadRequest();
         }
 
         var usuarioUpdate = await _service.GetById(id);
 
-        if (usuarioUpdate is not null )
+        if (usuarioUpdate is not null)
         {
             await _service.Update(id, usuario);
             return Ok();
@@ -89,7 +90,7 @@ public class UsuarioController : ControllerBase
     {
         var usuarioDelete = await _service.GetById(id);
 
-        if (usuarioDelete is not null )
+        if (usuarioDelete is not null)
         {
             await _service.Delete(id);
             return Ok();
