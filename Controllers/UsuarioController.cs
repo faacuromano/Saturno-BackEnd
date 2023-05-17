@@ -88,11 +88,11 @@ public class UsuarioController : ControllerBase
         if (usuarioUpdate is not null )
         {
             await _service.Update(id, usuario);
-            return Ok();
+            return Ok("Los cambios se han aplicado");
         }
         else
         {
-            return NotFound();
+            return NotFound("Hubo un error al realizar los cambios");
         }
     }
 

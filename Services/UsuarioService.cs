@@ -78,11 +78,11 @@ public class UsuarioService{
             usuarioExistente.Mail = usuario.Mail;
             usuarioExistente.NumTelefono = usuario.NumTelefono;
             usuarioExistente.FechaNacimiento = usuario.FechaNacimiento;
-            usuarioExistente.FotoPerfil = usuario.FotoPerfil;
+                
 
             await _context.SaveChangesAsync();
         }
-    }    
+    }
 
     public async Task Delete(int id)
     {
