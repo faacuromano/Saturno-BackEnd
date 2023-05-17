@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 using SATURNO_V2.Data;
 using SATURNO_V2.Data.DTOs;
@@ -41,7 +43,7 @@ public class UsuarioService{
 
     public async Task<Usuario?> Login(string username, string password)
     {
-        var response = await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == username && u.Pass == password);
+        var response = await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == username && u.Pass == hashPassword(password));
         return response;
     }
 
@@ -54,10 +56,10 @@ public class UsuarioService{
         nuevoUsuario.Mail = usuarioNuevoDto.NumTelefono;
         nuevoUsuario.FechaNacimiento = usuarioNuevoDto.FechaNacimiento;
         nuevoUsuario.CreacionCuenta = DateTime.Now;
-        nuevoUsuario.Pass = usuarioNuevoDto.Passw;
+        nuevoUsuario.Pass = hashPassword(usuarioNuevoDto.Passw);
         nuevoUsuario.NumTelefono = usuarioNuevoDto.NumTelefono;
         nuevoUsuario.FotoPerfil = usuarioNuevoDto.FotoPerfil;
-        nuevoUsuario.TipoCuenta = "U";
+        nuevoUsuario.TipoCuenta = usuarioNuevoDto.TipoCuenta;
         nuevoUsuario.Username = usuarioNuevoDto.Username;
 
         _context.Usuarios.Add(nuevoUsuario);
@@ -94,4 +96,15 @@ public class UsuarioService{
             await _context.SaveChangesAsync();
         }
     }
+
+    string hashPassword(string password)
+    {
+        var sha = SHA256.Create();
+
+        var asByteArray = Encoding.Default.GetBytes(password);
+        var hashedPassword = sha.ComputeHash(asByteArray);
+
+        return Convert.ToBase64String(hashedPassword);
+    }
 }
+

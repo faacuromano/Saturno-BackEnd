@@ -15,7 +15,7 @@ public class ProfesionalController : ControllerBase
     {
         _service = service;
     }
-
+    
     [HttpGet]
     public async Task<IEnumerable<ProfesionalDto>> Get()
     {

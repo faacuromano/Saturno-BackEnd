@@ -17,6 +17,8 @@ public class UsuarioDtoIn
 
     public string NumTelefono { get; set; } = null!;
 
+    public string TipoCuenta { get; set; } = null!;
+
     public DateTime FechaNacimiento { get; set; } 
 
     public string? FotoPerfil { get; set; }

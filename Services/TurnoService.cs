@@ -1,6 +1,4 @@
-using Microsoft.EntityFrameworkCore;
 using SATURNO_V2.Data;
-using SATURNO_V2.Data.SaturnoModels;
 
 namespace SATURNO_V2.Services;
 

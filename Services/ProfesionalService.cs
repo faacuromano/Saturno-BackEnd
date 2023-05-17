@@ -104,35 +104,6 @@ public class ProfesionalService{
         return profesionalNuevo;
     }
 
-    // public async Task<Profesionale?> Create(ProfesionalCreateDtoIn nuevoProfesionalDTO)
-    // {
-    //     var nuevoProfesional = new Profesionale();
-
-        
-    //     nuevoProfesional.Descripcion = nuevoProfesionalDTO.Descripcion;
-    //     nuevoProfesional.HorarioInicio = nuevoProfesionalDTO.HorarioInicio;
-    //     nuevoProfesional.HorarioFinal = nuevoProfesionalDTO.HorarioFinal;
-    //     nuevoProfesional.FotoBanner = nuevoProfesionalDTO.FotoBanner;
-    //     nuevoProfesional.Direccion = nuevoProfesionalDTO.Direccion;
-    //     nuevoProfesional.Ubicacion = nuevoProfesionalDTO.Ubicacion;
-    //     nuevoProfesional.IdUsuariosNavigation.Nombre = nuevoProfesionalDTO.Nombre;
-    //     nuevoProfesional.IdUsuariosNavigation.Apellido = nuevoProfesionalDTO.Apellido;
-    //     nuevoProfesional.IdUsuariosNavigation.NumTelefono = nuevoProfesionalDTO.NumTelefono;
-    //     nuevoProfesional.IdUsuariosNavigation.Pass = nuevoProfesionalDTO.Pass;
-    //     nuevoProfesional.IdUsuariosNavigation.Nombre = nuevoProfesionalDTO.Nombre;
-    //     nuevoProfesional.IdUsuariosNavigation.FechaNacimiento = nuevoProfesionalDTO.FechaNacimiento;
-    //     nuevoProfesional.IdUsuariosNavigation.FotoPerfil = nuevoProfesionalDTO.FotoPerfil;
-    //     nuevoProfesional.IdUsuariosNavigation.Username = nuevoProfesionalDTO.Username;
-    //     nuevoProfesional.IdUsuariosNavigation.TipoCuenta = "P";
-
-    //     _context.Profesionales.Add(nuevoProfesional);
-
-    //     await _context.SaveChangesAsync();
-        
-    //     return nuevoProfesional;
-    // }
-
-
     public async Task Update(int id, ProfesionalDtoIn profesionalDto) 
     {
         var profesionalExistente = await GetByIdToFunction(id);
