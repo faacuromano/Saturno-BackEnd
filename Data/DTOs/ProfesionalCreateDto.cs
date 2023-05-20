@@ -4,7 +4,8 @@ namespace SATURNO_V2.Data.DTOs;
 
 public class ProfesionalCreateDtoIn
 {
-    public int IdUsuarios { get; set; } 
+    public int IdUsuarios { get; set; }
+    
     public string? Descripcion { get; set; }
 
     public TimeSpan? HorarioInicio { get; set; }
@@ -22,14 +23,14 @@ public class ProfesionalCreateDtoIn
     public string Apellido { get; set; } = null!;
 
     public string Username { get; set; } = null!;
-    
+
     public string Mail { get; set; } = null!;
 
     public string Pass { get; set; } = null!;
 
     public string NumTelefono { get; set; } = null!;
 
-    public DateTime FechaNacimiento { get; set; } 
+    public DateTime FechaNacimiento { get; set; }
 
     public string? FotoPerfil { get; set; }
 

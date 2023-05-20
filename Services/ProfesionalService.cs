@@ -7,7 +7,8 @@ using System.Text;
 
 namespace SATURNO_V2.Services;
 
-public class ProfesionalService{
+public class ProfesionalService
+{
 
     private readonly SaturnoV2Context _context;
 
@@ -22,6 +23,7 @@ public class ProfesionalService{
         {
             Nombre = t.IdUsuariosNavigation.Nombre,
             Apellido = t.IdUsuariosNavigation.Apellido,
+            Username = t.IdUsuariosNavigation.Username,
             Mail = t.IdUsuariosNavigation.Mail,
             Pass = t.IdUsuariosNavigation.Pass,
             NumTelefono = t.IdUsuariosNavigation.NumTelefono,
@@ -30,16 +32,16 @@ public class ProfesionalService{
             Verificado = t.IdUsuariosNavigation.Verificado,
             CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
             TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
+            Ubicacion = t.IdUsuariosNavigation.Ubicacion,
             Descripcion = t.Descripcion,
             HorarioInicio = t.HorarioInicio,
             HorarioFinal = t.HorarioFinal,
             Direccion = t.Direccion,
-            Ubicacion = t.Ubicacion,
             IdUsuarios = t.IdUsuarios,
             FotoBanner = t.FotoBanner,
-            
+
         }).ToListAsync();
-        
+
     }
     public async Task<IEnumerable<ProfesionalDto>> GetFour(int n)
     {
@@ -47,6 +49,7 @@ public class ProfesionalService{
         {
             Nombre = t.IdUsuariosNavigation.Nombre,
             Apellido = t.IdUsuariosNavigation.Apellido,
+            Username = t.IdUsuariosNavigation.Username,
             Mail = t.IdUsuariosNavigation.Mail,
             Pass = t.IdUsuariosNavigation.Pass,
             NumTelefono = t.IdUsuariosNavigation.NumTelefono,
@@ -55,86 +58,88 @@ public class ProfesionalService{
             Verificado = t.IdUsuariosNavigation.Verificado,
             CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
             TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
+            Ubicacion = t.IdUsuariosNavigation.Ubicacion,
             Descripcion = t.Descripcion,
             HorarioInicio = t.HorarioInicio,
             HorarioFinal = t.HorarioFinal,
             Direccion = t.Direccion,
-            Ubicacion = t.Ubicacion,
             IdUsuarios = t.IdUsuarios,
             FotoBanner = t.FotoBanner,
-            
+
         }).ToListAsync();
 
         return professionalsToCut.Take(n).ToArray();
     }
     public async Task<Profesionale?> GetByIdToFunction(int id)
     {
-         return  await _context.Profesionales.FindAsync(id);
+        return await _context.Profesionales.FindAsync(id);
     }
-    
+
     public async Task<ProfesionalDto?> GetById(int id)
     {
-    return await _context.Profesionales
-        .Where(p => p.IdUsuariosNavigation.Id == id)
-        .Select(t => new ProfesionalDto{
-            Nombre = t.IdUsuariosNavigation.Nombre,
-            Apellido = t.IdUsuariosNavigation.Apellido,
-            Mail = t.IdUsuariosNavigation.Mail,
-            Pass = t.IdUsuariosNavigation.Pass,
-            NumTelefono = t.IdUsuariosNavigation.NumTelefono,
-            FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento,
-            FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
-            Verificado = t.IdUsuariosNavigation.Verificado,
-            CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
-            TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
-            Descripcion = t.Descripcion,
-            HorarioInicio = t.HorarioInicio,
-            HorarioFinal = t.HorarioFinal,
-            FotoBanner = t.FotoBanner,
-            Direccion = t.Direccion,
-            Ubicacion = t.Ubicacion,
-            IdUsuarios = t.IdUsuarios
-         })
-        .FirstOrDefaultAsync();
+        return await _context.Profesionales
+            .Where(p => p.IdUsuariosNavigation.Id == id)
+            .Select(t => new ProfesionalDto
+            {
+                Nombre = t.IdUsuariosNavigation.Nombre,
+                Apellido = t.IdUsuariosNavigation.Apellido,
+                Username = t.IdUsuariosNavigation.Username,
+                Mail = t.IdUsuariosNavigation.Mail,
+                Pass = t.IdUsuariosNavigation.Pass,
+                NumTelefono = t.IdUsuariosNavigation.NumTelefono,
+                FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento,
+                FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
+                Verificado = t.IdUsuariosNavigation.Verificado,
+                CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
+                TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
+                Descripcion = t.Descripcion,
+                HorarioInicio = t.HorarioInicio,
+                HorarioFinal = t.HorarioFinal,
+                FotoBanner = t.FotoBanner,
+                Direccion = t.Direccion,
+                IdUsuarios = t.IdUsuarios
+            })
+            .FirstOrDefaultAsync();
     }
+
     public async Task<Profesionale?> Create(Profesionale profesionalNuevo)
     {
-        profesionalNuevo.IdUsuariosNavigation.Pass = hashPassword(profesionalNuevo.IdUsuariosNavigation.Pass) ;
+        profesionalNuevo.IdUsuariosNavigation.Pass = hashPassword(profesionalNuevo.IdUsuariosNavigation.Pass);
         _context.Profesionales.Add(profesionalNuevo);
 
         await _context.SaveChangesAsync();
-        
+
         return profesionalNuevo;
     }
 
-    public async Task Update(int id, ProfesionalDtoIn profesionalDto) 
+    public async Task Update(int id, ProfesionalDtoIn profesionalDto)
     {
         var profesionalExistente = await GetByIdToFunction(id);
-        
+
         if (profesionalExistente is not null)
-            {
+        {
             profesionalExistente.Descripcion = profesionalDto.Descripcion;
             profesionalExistente.HorarioInicio = profesionalDto.HorarioInicio;
             profesionalExistente.HorarioFinal = profesionalDto.HorarioFinal;
             profesionalExistente.FotoBanner = profesionalDto.FotoBanner;
             profesionalExistente.Direccion = profesionalDto.Direccion;
             profesionalExistente.IdUsuarios = profesionalDto.IdUsuarios;
-            
-             await _context.SaveChangesAsync();
+
+            await _context.SaveChangesAsync();
         }
-    }    
+    }
     public async Task Delete(int id)
     {
-         var profesionalDelete = await GetByIdToFunction(id);
+        var profesionalDelete = await GetByIdToFunction(id);
 
-         if(profesionalDelete is not null)
-         {
-             _context.Profesionales.Remove(profesionalDelete);
-             await _context.SaveChangesAsync();
-         }
+        if (profesionalDelete is not null)
+        {
+            _context.Profesionales.Remove(profesionalDelete);
+            await _context.SaveChangesAsync();
+        }
     }
 
-        string hashPassword(string password)
+    string hashPassword(string password)
     {
         var sha = SHA256.Create();
 

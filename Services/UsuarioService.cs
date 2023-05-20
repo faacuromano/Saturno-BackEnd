@@ -10,7 +10,8 @@ using SATURNO_V2.Data.SaturnoModels;
 
 namespace SATURNO_V2.Services;
 
-public class UsuarioService{
+public class UsuarioService
+{
 
     private readonly SaturnoV2Context _context;
 
@@ -26,22 +27,24 @@ public class UsuarioService{
 
     public async Task<Usuario?> GetById(int id)
     {
-        return  await _context.Usuarios.FindAsync(id);
+        return await _context.Usuarios.FindAsync(id);
     }
 
     public async Task<UsuarioDtoOut?> GetByIdToFunction(int id)
     {
-         return await _context.Usuarios
-        .Where(p => p.Id == id)
-        .Select(t => new UsuarioDtoOut{
-            Nombre = t.Nombre,
-            Apellido = t.Apellido,
-            Mail = t.Mail,
-            NumTelefono = t.NumTelefono,
-            FechaNacimiento = t.FechaNacimiento,
-            FotoPerfil = t.FotoPerfil,
-         })
-        .FirstOrDefaultAsync();
+        return await _context.Usuarios
+       .Where(p => p.Id == id)
+       .Select(t => new UsuarioDtoOut
+       {
+           Nombre = t.Nombre,
+           Apellido = t.Apellido,
+           Mail = t.Mail,
+           NumTelefono = t.NumTelefono,
+           FechaNacimiento = t.FechaNacimiento,
+           Ubicacion = t.Ubicacion,
+           FotoPerfil = t.FotoPerfil,
+       })
+       .FirstOrDefaultAsync();
     }
 
 
@@ -57,6 +60,7 @@ public class UsuarioService{
         nuevoUsuario.Pass = hashPassword(usuarioNuevoDto.Passw);
         nuevoUsuario.NumTelefono = usuarioNuevoDto.NumTelefono;
         nuevoUsuario.FotoPerfil = usuarioNuevoDto.FotoPerfil;
+        nuevoUsuario.Ubicacion = usuarioNuevoDto.Ubicacion;
         nuevoUsuario.TipoCuenta = usuarioNuevoDto.TipoCuenta;
         nuevoUsuario.Username = usuarioNuevoDto.Username;
 
@@ -66,7 +70,7 @@ public class UsuarioService{
         return nuevoUsuario;
     }
 
-    public async Task Update(int id, UsuarioDtoOut usuario) 
+    public async Task Update(int id, UsuarioDtoOut usuario)
     {
         var usuarioExistente = await GetById(id);
 
@@ -74,11 +78,13 @@ public class UsuarioService{
         {
             usuarioExistente.Id = usuario.Id;
             usuarioExistente.Nombre = usuario.Nombre;
+            usuarioExistente.Username = usuario.Username;
             usuarioExistente.Apellido = usuario.Apellido;
             usuarioExistente.Mail = usuario.Mail;
+            usuarioExistente.Ubicacion = usuario.Ubicacion;
             usuarioExistente.NumTelefono = usuario.NumTelefono;
             usuarioExistente.FechaNacimiento = usuario.FechaNacimiento;
-                
+
 
             await _context.SaveChangesAsync();
         }
@@ -88,7 +94,7 @@ public class UsuarioService{
     {
         var usuarioDelete = await GetById(id);
 
-        if(usuarioDelete is not null)
+        if (usuarioDelete is not null)
         {
             _context.Usuarios.Remove(usuarioDelete);
             await _context.SaveChangesAsync();
@@ -111,6 +117,6 @@ public class UsuarioService{
         return Convert.ToBase64String(hashedPassword);
     }
 
-    
+
 }
 

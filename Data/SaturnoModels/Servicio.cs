@@ -17,8 +17,10 @@ public partial class Servicio
 
     public TimeSpan Duracion { get; set; }
 
+    public int? IdProfesional { get; set; }
+
     [JsonIgnore]
-    public virtual ICollection<Profesionale> Profesionales { get; set; } = new List<Profesionale>();
+    public virtual Profesionale? IdProfesionalNavigation { get; set; }
 
     [JsonIgnore]
     public virtual ICollection<Turno> Turnos { get; set; } = new List<Turno>();

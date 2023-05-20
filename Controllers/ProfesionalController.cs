@@ -15,7 +15,7 @@ public class ProfesionalController : ControllerBase
     {
         _service = service;
     }
-    
+
     [HttpGet]
     public async Task<IEnumerable<ProfesionalDto>> Get()
     {
@@ -32,13 +32,13 @@ public class ProfesionalController : ControllerBase
     public async Task<ActionResult<ProfesionalDto>> GetById(int id)
     {
         var profesional = await _service.GetById(id);
-       
-        if (profesional is not null) 
-        { 
-            return profesional; 
+
+        if (profesional is not null)
+        {
+            return profesional;
         }
         else
-        { 
+        {
             return NotFound();
         }
 
@@ -49,9 +49,9 @@ public class ProfesionalController : ControllerBase
     {
         var profesionalNuevo = await _service.Create(profesional);
 
-        if (profesionalNuevo is not null )
+        if (profesionalNuevo is not null)
         {
-            return CreatedAtAction(nameof(GetById), new {id = profesionalNuevo.IdUsuarios}, profesionalNuevo);
+            return CreatedAtAction(nameof(GetById), new { id = profesionalNuevo.IdUsuarios }, profesionalNuevo);
         }
         else
         {
@@ -62,7 +62,8 @@ public class ProfesionalController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, ProfesionalDtoIn profesionalDtoIn)
     {
-        if (id != profesionalDtoIn.IdUsuarios){
+        if (id != profesionalDtoIn.IdUsuarios)
+        {
             return BadRequest();
         }
 
@@ -75,7 +76,7 @@ public class ProfesionalController : ControllerBase
     {
         var profesionalDelete = await _service.GetById(id);
 
-        if (profesionalDelete is not null )
+        if (profesionalDelete is not null)
         {
             await _service.Delete(id);
             return Ok();

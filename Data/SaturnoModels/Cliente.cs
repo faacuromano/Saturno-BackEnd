@@ -8,6 +8,7 @@ public partial class Cliente
 {
     public int IdUsuarios { get; set; }
 
+    [JsonIgnore]
     public virtual Usuario IdUsuariosNavigation { get; set; } = null!;
 
     [JsonIgnore]

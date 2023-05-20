@@ -28,6 +28,10 @@ public partial class SaturnoV2Context : DbContext
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=localhost;Database=Saturno_V2;Trusted_connection=true;TrustServerCertificate=True");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Administrador>(entity =>
@@ -87,6 +91,10 @@ public partial class SaturnoV2Context : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("direccion");
+            entity.Property(e => e.EstadoSubscripcion)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("estado_subscripcion");
             entity.Property(e => e.FotoBanner)
                 .HasMaxLength(350)
                 .IsUnicode(false)
@@ -98,15 +106,10 @@ public partial class SaturnoV2Context : DbContext
             entity.Property(e => e.HorarioInicio)
                 .HasPrecision(0)
                 .HasColumnName("horarioInicio");
-            entity.Property(e => e.IdServicios).HasColumnName("ID_Servicios");
-            entity.Property(e => e.Ubicacion)
-                .HasMaxLength(100)
+            entity.Property(e => e.Profesion)
+                .HasMaxLength(30)
                 .IsUnicode(false)
-                .HasColumnName("ubicacion");
-
-            entity.HasOne(d => d.IdServiciosNavigation).WithMany(p => p.Profesionales)
-                .HasForeignKey(d => d.IdServicios)
-                .HasConstraintName("FK_Profesionales_Servicios");
+                .HasColumnName("profesion");
 
             entity.HasOne(d => d.IdUsuariosNavigation).WithOne(p => p.Profesionale)
                 .HasForeignKey<Profesionale>(d => d.IdUsuarios)
@@ -126,6 +129,7 @@ public partial class SaturnoV2Context : DbContext
             entity.Property(e => e.Duracion)
                 .HasPrecision(0)
                 .HasColumnName("duracion");
+            entity.Property(e => e.IdProfesional).HasColumnName("ID_Profesional");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -133,6 +137,10 @@ public partial class SaturnoV2Context : DbContext
             entity.Property(e => e.Precio)
                 .HasColumnType("decimal(7, 2)")
                 .HasColumnName("precio");
+
+            entity.HasOne(d => d.IdProfesionalNavigation).WithMany(p => p.Servicios)
+                .HasForeignKey(d => d.IdProfesional)
+                .HasConstraintName("FK_Servicios_Profesionales");
         });
 
         modelBuilder.Entity<Turno>(entity =>
@@ -176,6 +184,8 @@ public partial class SaturnoV2Context : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__Usuarios__3214EC27F932E28D");
 
+            entity.HasIndex(e => e.Username, "UQ__Username").IsUnique();
+
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Apellido)
                 .HasMaxLength(50)
@@ -212,6 +222,10 @@ public partial class SaturnoV2Context : DbContext
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .HasColumnName("tipoCuenta");
+            entity.Property(e => e.Ubicacion)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ubicacion");
             entity.Property(e => e.Username)
                 .HasMaxLength(50)
                 .IsUnicode(false)

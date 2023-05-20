@@ -24,7 +24,8 @@ builder.Services.AddScoped<TurnoService>();
 builder.Services.AddScoped<ServicioService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options => {
+    .AddJwtBearer(options =>
+    {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,

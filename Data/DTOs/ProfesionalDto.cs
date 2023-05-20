@@ -10,7 +10,11 @@ public class ProfesionalDto
 
     public string Apellido { get; set; } = null!;
 
+    public string Username { get; set; } = null!;
+
     public string Mail { get; set; } = null!;
+
+    public string? Ubicacion { get; set; }
 
     public string Pass { get; set; } = null!;
 
@@ -25,7 +29,7 @@ public class ProfesionalDto
     public DateTime CreacionCuenta { get; set; }
 
     public string? TipoCuenta { get; set; }
-    
+
     public string? Descripcion { get; set; }
 
     public TimeSpan? HorarioInicio { get; set; }
@@ -35,8 +39,6 @@ public class ProfesionalDto
     public string? FotoBanner { get; set; }
 
     public string? Direccion { get; set; }
-    
-    public string? Ubicacion { get; set; }
 
     [JsonIgnore]
     public virtual UsuarioDtoIn IdUsuariosNavigation { get; set; } = null!;

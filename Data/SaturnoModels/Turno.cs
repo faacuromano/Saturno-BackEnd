@@ -6,6 +6,7 @@ namespace SATURNO_V2.Data.SaturnoModels;
 
 public partial class Turno
 {
+    [JsonIgnore]
     public int Id { get; set; }
 
     public int IdClientes { get; set; }
@@ -25,7 +26,7 @@ public partial class Turno
 
     [JsonIgnore]
     public virtual Profesionale IdProfesionalesNavigation { get; set; } = null!;
-    
+
     [JsonIgnore]
     public virtual Servicio IdServiciosNavigation { get; set; } = null!;
 }

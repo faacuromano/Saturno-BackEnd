@@ -22,26 +22,28 @@ public class ServicioController : ControllerBase
         return await _service.GetAll();
     }
 
-    [HttpGet("cuted/{n}")]
-    public async Task<IEnumerable<Servicio>> GetFour(int n)
-    {
-        return await _service.GetFour(n);
-    }
-
     [HttpGet("{id}")]
     public async Task<ActionResult<Servicio>> GetById(int id)
     {
         var servicio = await _service.GetById(id);
-       
-        if (servicio is not null) 
-        { 
-            return servicio; 
+
+        if (servicio is not null)
+        {
+            return servicio;
         }
         else
-        { 
+        {
             return NotFound();
         }
 
+    }
+
+    [HttpGet("/profesionalServices/{username}")]
+    public async Task<IEnumerable<Servicio>> GetByProfesional(string username)
+    {
+        var servicio = await _service.GetByProfesional(username);
+
+        return servicio;
     }
 
     [HttpPost]
@@ -49,9 +51,9 @@ public class ServicioController : ControllerBase
     {
         var servicioNuevo = await _service.Create(servicio);
 
-        if (servicioNuevo is not null )
+        if (servicioNuevo is not null)
         {
-            return CreatedAtAction(nameof(GetById), new {id = servicioNuevo.Id}, servicioNuevo);
+            return CreatedAtAction(nameof(GetById), new { id = servicioNuevo.Id }, servicioNuevo);
         }
         else
         {
@@ -62,7 +64,8 @@ public class ServicioController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, Servicio servicio)
     {
-        if (id != servicio.Id){
+        if (id != servicio.Id)
+        {
             return BadRequest();
         }
 
@@ -75,7 +78,7 @@ public class ServicioController : ControllerBase
     {
         var servicioDelete = await _service.GetById(id);
 
-        if (servicioDelete is not null )
+        if (servicioDelete is not null)
         {
             await _service.Delete(id);
             return Ok();

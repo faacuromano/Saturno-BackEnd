@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using SATURNO_V2.Data.DTOs;
 using System.Text.Json.Serialization;
 
 namespace SATURNO_V2.Data.SaturnoModels;
@@ -20,15 +19,14 @@ public partial class Profesionale
 
     public string Direccion { get; set; } = null!;
 
-    public string Ubicacion { get; set; } = null!;
+    public string? EstadoSubscripcion { get; set; }
+
+    public string? Profesion { get; set; }
 
     [JsonIgnore]
-    public int? IdServicios { get; set; }
-
-    [JsonIgnore]
-    public virtual Servicio? IdServiciosNavigation { get; set; }
-
     public virtual Usuario IdUsuariosNavigation { get; set; } = null!;
+
+    public virtual ICollection<Servicio> Servicios { get; set; } = new List<Servicio>();
 
     [JsonIgnore]
     public virtual ICollection<Turno> Turnos { get; set; } = new List<Turno>();

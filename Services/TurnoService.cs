@@ -1,8 +1,11 @@
+using Microsoft.EntityFrameworkCore;
 using SATURNO_V2.Data;
+using SATURNO_V2.Data.SaturnoModels;
 
 namespace SATURNO_V2.Services;
 
-public class TurnoService{
+public class TurnoService
+{
 
     private readonly SaturnoV2Context _context;
 
@@ -10,5 +13,83 @@ public class TurnoService{
     {
         _context = context;
     }
+
+    public async Task<IEnumerable<Turno>> GetAll()
+    {
+        return await _context.Turnos.Select(t => new Turno
+        {
+            IdClientes = t.IdClientes,  
+            IdProfesionales = t.IdProfesionales,
+            IdServicios = t.IdServicios,
+            Observaciones = t.Observaciones,
+            HoraTurno = t.HoraTurno,
+            FechaTurno = t.FechaTurno
+        }).ToListAsync();
+
+    }
+
+    public async Task<IEnumerable<Turno>> GetFour(int n)
+    {
+        var professionalsToCut = await _context.Turnos.Select(t => new Turno
+        {
+            IdClientes = t.IdClientes,
+            IdProfesionales = t.IdProfesionales,
+            IdServicios = t.IdServicios,
+            Observaciones = t.Observaciones,
+            HoraTurno = t.HoraTurno,
+            FechaTurno = t.FechaTurno
+        }).ToListAsync();
+
+        return professionalsToCut.Take(n).ToArray();
+    }
+
+    public async Task<Turno?> GetByIdToFunction(int id)
+    {
+        return await _context.Turnos.FindAsync(id);
+    }
+
+    public async Task<Turno?> GetById(int id)
+    {
+        return await _context.Turnos
+            .Where(p => p.Id == id)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<Turno?> Create(Turno turnoNuevo)
+    {
+        _context.Turnos.Add(turnoNuevo);
+
+        await _context.SaveChangesAsync();
+
+        return turnoNuevo;
+    }
+
+    public async Task Update(int id, Turno turnoDto)
+    {
+        var profesionalExistente = await GetByIdToFunction(id);
+
+        if (profesionalExistente is not null)
+        {
+            profesionalExistente.IdClientes = turnoDto.IdClientes;
+            profesionalExistente.IdProfesionales = turnoDto.IdProfesionales;
+            profesionalExistente.IdServicios = turnoDto.IdServicios;
+            profesionalExistente.Observaciones = turnoDto.Observaciones;
+            profesionalExistente.HoraTurno = turnoDto.HoraTurno;
+            profesionalExistente.FechaTurno = turnoDto.FechaTurno;
+
+            await _context.SaveChangesAsync();
+        }
+    }
+    public async Task Delete(int id)
+    {
+        var ususarioDelete = await GetByIdToFunction(id);
+
+        if (ususarioDelete is not null)
+        {
+            _context.Turnos.Remove(ususarioDelete);
+            await _context.SaveChangesAsync();
+        }
+    }
+
 
 }

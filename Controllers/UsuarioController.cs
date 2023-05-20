@@ -15,7 +15,7 @@ namespace SATURNO_V2.Controllers;
 public class UsuarioController : ControllerBase
 {
     private readonly UsuarioService _service;
-    private IConfiguration config;    
+    private IConfiguration config;
     public UsuarioController(UsuarioService service, IConfiguration config)
     {
         _service = service;
@@ -32,13 +32,13 @@ public class UsuarioController : ControllerBase
     public async Task<ActionResult<Usuario>> GetById(int id)
     {
         var usuario = await _service.GetById(id);
-       
-        if (usuario is not null) 
-        { 
-            return usuario; 
+
+        if (usuario is not null)
+        {
+            return usuario;
         }
         else
-        { 
+        {
             return NotFound();
         }
 
@@ -48,13 +48,13 @@ public class UsuarioController : ControllerBase
     public async Task<ActionResult<UsuarioDtoOut>> GetByIdToFunction(int id)
     {
         var usuario = await _service.GetByIdToFunction(id);
-       
-        if (usuario is not null) 
-        { 
-            return usuario; 
+
+        if (usuario is not null)
+        {
+            return usuario;
         }
         else
-        { 
+        {
             return NotFound();
         }
 
@@ -64,25 +64,25 @@ public class UsuarioController : ControllerBase
     public async Task<ActionResult<Usuario>> Login(string username, string password)
     {
         var user = await _service.Login(username, password);
-       
-        if (user is not null) 
-        { 
+
+        if (user is not null)
+        {
             string jwtToken = GenerateToken(user);
-            return  Ok( new {token = jwtToken, user }); 
+            return Ok(new { token = jwtToken, user });
         }
         else
-        { 
+        {
             return NotFound("Credenciales Incorrectas");
         }
-        }
+    }
 
 
-    [HttpPost]    
+    [HttpPost]
     public async Task<IActionResult> Create(UsuarioDtoIn usuario)
     {
         var usuarioNuevo = await _service.Create(usuario);
 
-        return CreatedAtAction(nameof(GetById), new {id = usuarioNuevo.Id}, usuarioNuevo);
+        return CreatedAtAction(nameof(GetById), new { id = usuarioNuevo.Id }, usuarioNuevo);
 
     }
 
@@ -92,7 +92,7 @@ public class UsuarioController : ControllerBase
 
         var usuarioUpdate = await _service.GetByIdToFunction(id);
 
-        if (usuarioUpdate is not null )
+        if (usuarioUpdate is not null)
         {
             await _service.Update(id, usuario);
             return Ok("Los cambios se han aplicado");
@@ -109,7 +109,7 @@ public class UsuarioController : ControllerBase
     {
         var usuarioDelete = await _service.GetById(id);
 
-        if (usuarioDelete is not null )
+        if (usuarioDelete is not null)
         {
             await _service.Delete(id);
             return Ok();
@@ -122,7 +122,7 @@ public class UsuarioController : ControllerBase
 
     private string GenerateToken(Usuario usuario)
     {
-        var claims = new []
+        var claims = new[]
         {
             new Claim(ClaimTypes.Name, usuario.Username),
             new Claim(ClaimTypes.Email, usuario.Mail)
@@ -135,7 +135,7 @@ public class UsuarioController : ControllerBase
                             claims: claims,
                             expires: DateTime.Now.AddMinutes(60),
                             signingCredentials: creds);
-    
+
         string token = new JwtSecurityTokenHandler().WriteToken(securityToken);
 
         return token;
