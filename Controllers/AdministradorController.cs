@@ -5,7 +5,7 @@ using SATURNO_V2.Data.SaturnoModels;
 namespace SATURNO_V2.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("administrador")]
 
 public class AdministradorController : ControllerBase
 {
@@ -14,5 +14,5 @@ public class AdministradorController : ControllerBase
     {
         _service = service;
     }
-    
+
 }
