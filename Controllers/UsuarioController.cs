@@ -10,7 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 namespace SATURNO_V2.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("usuario")]
 
 public class UsuarioController : ControllerBase
 {

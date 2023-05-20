@@ -5,7 +5,7 @@ using SATURNO_V2.Data.SaturnoModels;
 namespace SATURNO_V2.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("turno")]
 
 public class TurnoController : ControllerBase
 {

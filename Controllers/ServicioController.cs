@@ -6,7 +6,7 @@ using SATURNO_V2.Data.DTOs;
 namespace SATURNO_V2.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("servicio")]
 
 public class ServicioController : ControllerBase
 {
