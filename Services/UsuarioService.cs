@@ -54,7 +54,7 @@ public class UsuarioService
 
         nuevoUsuario.Nombre = usuarioNuevoDto.Nombre;
         nuevoUsuario.Apellido = usuarioNuevoDto.Apellido;
-        nuevoUsuario.Mail = usuarioNuevoDto.NumTelefono;
+        nuevoUsuario.Mail = usuarioNuevoDto.Mail;
         nuevoUsuario.FechaNacimiento = usuarioNuevoDto.FechaNacimiento;
         nuevoUsuario.CreacionCuenta = DateTime.Now;
         nuevoUsuario.Pass = hashPassword(usuarioNuevoDto.Passw);
