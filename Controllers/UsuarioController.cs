@@ -125,7 +125,8 @@ public class UsuarioController : ControllerBase
         var claims = new[]
         {
             new Claim(ClaimTypes.Name, usuario.Username),
-            new Claim(ClaimTypes.Email, usuario.Mail)
+            new Claim(ClaimTypes.Email, usuario.Mail),
+            new Claim("TipoUsuario", usuario.TipoCuenta),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetSection("JWT:Key").Value));

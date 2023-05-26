@@ -6,9 +6,9 @@ namespace SATURNO_V2.Data.SaturnoModels;
 
 public partial class Cliente
 {
+    [JsonIgnore]
     public int IdUsuarios { get; set; }
 
-    [JsonIgnore]
     public virtual Usuario IdUsuariosNavigation { get; set; } = null!;
 
     [JsonIgnore]

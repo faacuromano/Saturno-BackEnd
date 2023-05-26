@@ -4,7 +4,6 @@ namespace SATURNO_V2.Data.DTOs;
 
 public class ProfesionalDto
 {
-    public int IdUsuarios { get; set; }
 
     public string Nombre { get; set; } = null!;
 

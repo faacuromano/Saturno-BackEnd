@@ -37,6 +37,22 @@ public class TurnoController : ControllerBase
 
     }
 
+    [HttpGet("/turnosDe/{username}")]
+    public async Task<ActionResult<Turno>> GetByProfesional(string username)
+    {
+        var turno = await _service.GetByProfesional(username);
+
+        // if (turno is not null)
+        // {
+        return turno;
+        // }
+        // else
+        // {
+        //     return NotFound();
+        // }
+
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create(Turno turno)
     {

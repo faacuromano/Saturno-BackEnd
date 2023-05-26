@@ -61,14 +61,14 @@ public class ServicioService
 
     public async Task Update(int id, Servicio servicioDto)
     {
-        var profesionalExistente = await GetByIdToFunction(id);
+        var servicioExistente = await GetByIdToFunction(id);
 
-        if (profesionalExistente is not null)
+        if (servicioExistente is not null)
         {
-            profesionalExistente.Descripcion = servicioDto.Descripcion;
-            profesionalExistente.Nombre = servicioDto.Nombre;
-            profesionalExistente.Precio = servicioDto.Precio;
-            profesionalExistente.Duracion = servicioDto.Duracion;
+            servicioExistente.Descripcion = servicioDto.Descripcion;
+            servicioExistente.Nombre = servicioDto.Nombre;
+            servicioExistente.Precio = servicioDto.Precio;
+            servicioExistente.Duracion = servicioDto.Duracion;
 
             await _context.SaveChangesAsync();
         }
@@ -83,5 +83,7 @@ public class ServicioService
             await _context.SaveChangesAsync();
         }
     }
+
+
 
 }

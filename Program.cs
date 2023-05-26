@@ -22,6 +22,7 @@ builder.Services.AddScoped<ProfesionalService>();
 builder.Services.AddScoped<ClienteService>();
 builder.Services.AddScoped<TurnoService>();
 builder.Services.AddScoped<ServicioService>();
+builder.Services.AddScoped<ListaServices>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -34,6 +35,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false
         };
     });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Profesional", policy => policy.RequireClaim("TipoUsuario", "P"));
+});
 
 var app = builder.Build();
 

@@ -38,13 +38,14 @@ public class ServicioController : ControllerBase
 
     }
 
-    [HttpGet("/profesionalServices/{username}")]
+    [HttpGet("/serviciosDe/{username}")]
     public async Task<IEnumerable<Servicio>> GetByProfesional(string username)
     {
         var servicio = await _service.GetByProfesional(username);
 
         return servicio;
     }
+
 
     [HttpPost]
     public async Task<IActionResult> Create(Servicio servicio)

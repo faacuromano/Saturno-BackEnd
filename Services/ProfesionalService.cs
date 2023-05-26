@@ -2,8 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SATURNO_V2.Data;
 using SATURNO_V2.Data.SaturnoModels;
 using SATURNO_V2.Data.DTOs;
-using System.Security.Cryptography;
-using System.Text;
+using SATURNO_V2.Functions;
 
 namespace SATURNO_V2.Services;
 
@@ -37,7 +36,6 @@ public class ProfesionalService
             HorarioInicio = t.HorarioInicio,
             HorarioFinal = t.HorarioFinal,
             Direccion = t.Direccion,
-            IdUsuarios = t.IdUsuarios,
             FotoBanner = t.FotoBanner,
 
         }).ToListAsync();
@@ -63,7 +61,6 @@ public class ProfesionalService
             HorarioInicio = t.HorarioInicio,
             HorarioFinal = t.HorarioFinal,
             Direccion = t.Direccion,
-            IdUsuarios = t.IdUsuarios,
             FotoBanner = t.FotoBanner,
 
         }).ToListAsync();
@@ -97,14 +94,40 @@ public class ProfesionalService
                 HorarioFinal = t.HorarioFinal,
                 FotoBanner = t.FotoBanner,
                 Direccion = t.Direccion,
-                IdUsuarios = t.IdUsuarios
+            })
+            .FirstOrDefaultAsync();
+    }
+    public async Task<ProfesionalDto?> GetByUsername(string username)
+    {
+        return await _context.Profesionales
+            .Where(p => p.IdUsuariosNavigation.Username == username)
+            .Select(t => new ProfesionalDto
+            {
+                Nombre = t.IdUsuariosNavigation.Nombre,
+                Apellido = t.IdUsuariosNavigation.Apellido,
+                Username = t.IdUsuariosNavigation.Username,
+                Mail = t.IdUsuariosNavigation.Mail,
+                Pass = t.IdUsuariosNavigation.Pass,
+                NumTelefono = t.IdUsuariosNavigation.NumTelefono,
+                FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento,
+                FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
+                Verificado = t.IdUsuariosNavigation.Verificado,
+                CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
+                TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
+                Descripcion = t.Descripcion,
+                HorarioInicio = t.HorarioInicio,
+                HorarioFinal = t.HorarioFinal,
+                FotoBanner = t.FotoBanner,
+                Direccion = t.Direccion,
             })
             .FirstOrDefaultAsync();
     }
 
     public async Task<Profesionale?> Create(Profesionale profesionalNuevo)
     {
-        profesionalNuevo.IdUsuariosNavigation.Pass = hashPassword(profesionalNuevo.IdUsuariosNavigation.Pass);
+        profesionalNuevo.IdUsuariosNavigation.Pass = PH.hashPassword(profesionalNuevo.IdUsuariosNavigation.Pass);
+        profesionalNuevo.IdUsuariosNavigation.Nombre = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Nombre);
+        profesionalNuevo.IdUsuariosNavigation.Apellido = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Apellido);
         _context.Profesionales.Add(profesionalNuevo);
 
         await _context.SaveChangesAsync();
@@ -137,16 +160,6 @@ public class ProfesionalService
             _context.Profesionales.Remove(profesionalDelete);
             await _context.SaveChangesAsync();
         }
-    }
-
-    string hashPassword(string password)
-    {
-        var sha = SHA256.Create();
-
-        var asByteArray = Encoding.Default.GetBytes(password);
-        var hashedPassword = sha.ComputeHash(asByteArray);
-
-        return Convert.ToBase64String(hashedPassword);
     }
 
 }

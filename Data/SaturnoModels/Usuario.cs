@@ -23,7 +23,7 @@ public partial class Usuario
 
     public DateTime FechaNacimiento { get; set; }
 
-    public string FotoPerfil { get; set; } = null!;
+    public string? FotoPerfil { get; set; }
 
     public string Pass { get; set; } = null!;
 

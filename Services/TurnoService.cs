@@ -18,7 +18,7 @@ public class TurnoService
     {
         return await _context.Turnos.Select(t => new Turno
         {
-            IdClientes = t.IdClientes,  
+            IdClientes = t.IdClientes,
             IdProfesionales = t.IdProfesionales,
             IdServicios = t.IdServicios,
             Observaciones = t.Observaciones,
@@ -52,6 +52,12 @@ public class TurnoService
     {
         return await _context.Turnos
             .Where(p => p.Id == id)
+            .FirstOrDefaultAsync();
+    }
+    public async Task<Turno?> GetByProfesional(string username)
+    {
+        return await _context.Turnos
+            .Where(p => p.IdProfesionalesNavigation.IdUsuariosNavigation.Username == username)
             .FirstOrDefaultAsync();
     }
 
@@ -90,6 +96,5 @@ public class TurnoService
             await _context.SaveChangesAsync();
         }
     }
-
 
 }

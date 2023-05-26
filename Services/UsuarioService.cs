@@ -1,12 +1,9 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using SATURNO_V2.Data;
 using SATURNO_V2.Data.DTOs;
 using SATURNO_V2.Data.SaturnoModels;
+using SATURNO_V2.Functions;
 
 namespace SATURNO_V2.Services;
 
@@ -39,6 +36,7 @@ public class UsuarioService
            Nombre = t.Nombre,
            Apellido = t.Apellido,
            Mail = t.Mail,
+           Username = t.Username,
            NumTelefono = t.NumTelefono,
            FechaNacimiento = t.FechaNacimiento,
            Ubicacion = t.Ubicacion,
@@ -52,17 +50,19 @@ public class UsuarioService
     {
         var nuevoUsuario = new Usuario();
 
-        nuevoUsuario.Nombre = usuarioNuevoDto.Nombre;
-        nuevoUsuario.Apellido = usuarioNuevoDto.Apellido;
+        nuevoUsuario.Nombre = NN.ConvertirNombre(usuarioNuevoDto.Nombre);
+        nuevoUsuario.Apellido = NN.ConvertirNombre(usuarioNuevoDto.Nombre);
         nuevoUsuario.Mail = usuarioNuevoDto.Mail;
         nuevoUsuario.FechaNacimiento = usuarioNuevoDto.FechaNacimiento;
         nuevoUsuario.CreacionCuenta = DateTime.Now;
-        nuevoUsuario.Pass = hashPassword(usuarioNuevoDto.Passw);
+        nuevoUsuario.Pass = PH.hashPassword(usuarioNuevoDto.Passw);
         nuevoUsuario.NumTelefono = usuarioNuevoDto.NumTelefono;
         nuevoUsuario.FotoPerfil = usuarioNuevoDto.FotoPerfil;
         nuevoUsuario.Ubicacion = usuarioNuevoDto.Ubicacion;
         nuevoUsuario.TipoCuenta = usuarioNuevoDto.TipoCuenta;
         nuevoUsuario.Username = usuarioNuevoDto.Username;
+
+
 
         _context.Usuarios.Add(nuevoUsuario);
         await _context.SaveChangesAsync();
@@ -77,10 +77,10 @@ public class UsuarioService
         if (usuarioExistente is not null)
         {
             usuarioExistente.Id = usuario.Id;
-            usuarioExistente.Nombre = usuario.Nombre;
+            usuarioExistente.Nombre = NN.ConvertirNombre(usuario.Nombre);
+            usuarioExistente.Apellido = NN.ConvertirNombre(usuario.Apellido);
             usuarioExistente.Username = usuario.Username;
-            usuarioExistente.Apellido = usuario.Apellido;
-            usuarioExistente.Mail = usuario.Mail;
+            usuarioExistente.Mail = VerificarCorreo(usuario.Mail);
             usuarioExistente.Ubicacion = usuario.Ubicacion;
             usuarioExistente.NumTelefono = usuario.NumTelefono;
             usuarioExistente.FechaNacimiento = usuario.FechaNacimiento;
@@ -103,19 +103,29 @@ public class UsuarioService
 
     public async Task<Usuario?> Login(string username, string password)
     {
-        var response = await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == username && u.Pass == hashPassword(password));
+        var response = await _context.Usuarios
+                            .FirstOrDefaultAsync(u => u.Username == username && u.Pass == PH.hashPassword(password));
         return response;
     }
 
-    string hashPassword(string password)
+    static string VerificarCorreo(string correo)
     {
-        var sha = SHA256.Create();
+        // Expresión regular para verificar el correo electrónico
+        string patron = @"^[a-zA-Z0-9._%+-]+@(gmail|hotmail|outlook|yahoo|aol)\.com$";
 
-        var asByteArray = Encoding.Default.GetBytes(password);
-        var hashedPassword = sha.ComputeHash(asByteArray);
+        // Verificar si el correo cumple con el patrón
+        bool esValido = Regex.IsMatch(correo, patron, RegexOptions.IgnoreCase);
 
-        return Convert.ToBase64String(hashedPassword);
+        if (esValido is true)
+        {
+            return correo;
+        }
+        else
+        {
+            return "El mail ingresado no es valido";
+        }
     }
+
 
 
 }

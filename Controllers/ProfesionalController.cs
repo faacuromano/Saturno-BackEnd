@@ -28,7 +28,22 @@ public class ProfesionalController : ControllerBase
         return await _service.GetFour(n);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{username}")]
+    public async Task<ActionResult<ProfesionalDto>> GetByUsername(string username)
+    {
+        var profesional = await _service.GetByUsername(username);
+
+        if (profesional is not null)
+        {
+            return profesional;
+        }
+        else
+        {
+            return NotFound();
+        }
+
+    }
+    [HttpGet("id/{id}")]
     public async Task<ActionResult<ProfesionalDto>> GetById(int id)
     {
         var profesional = await _service.GetById(id);
@@ -86,4 +101,5 @@ public class ProfesionalController : ControllerBase
             return NotFound();
         }
     }
+
 }
