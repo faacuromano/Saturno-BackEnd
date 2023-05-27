@@ -14,7 +14,7 @@ public class ListaController : ControllerBase
         _service = service;
     }
 
-    [HttpGet("/rubros")]
+    [HttpGet("/getRubros")]
     public List<string> GetRubro()
     {
         var servicio = _service.GetRubro();
@@ -22,7 +22,7 @@ public class ListaController : ControllerBase
         return servicio;
     }
 
-    [HttpGet("/ubicaciones")]
+    [HttpGet("/getUbicaciones")]
     public List<string> GetUbicaciones()
     {
         var servicio = _service.GetUbicaciones();

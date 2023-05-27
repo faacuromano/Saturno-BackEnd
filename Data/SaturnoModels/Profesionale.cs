@@ -19,13 +19,14 @@ public partial class Profesionale
 
     public string Direccion { get; set; } = null!;
 
+    [JsonIgnore]
     public string? EstadoSubscripcion { get; set; }
 
     public string? Profesion { get; set; }
 
-    [JsonIgnore]
     public virtual Usuario IdUsuariosNavigation { get; set; } = null!;
 
+    [JsonIgnore]
     public virtual ICollection<Servicio> Servicios { get; set; } = new List<Servicio>();
 
     [JsonIgnore]

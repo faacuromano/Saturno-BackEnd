@@ -27,6 +27,7 @@ public partial class Usuario
 
     public string Pass { get; set; } = null!;
 
+    [JsonIgnore]
     public DateTime CreacionCuenta { get; set; }
 
     public bool Verificado { get; set; }

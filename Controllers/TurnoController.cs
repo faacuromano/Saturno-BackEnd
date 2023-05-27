@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SATURNO_V2.Services;
 using SATURNO_V2.Data.SaturnoModels;
+using SATURNO_V2.Data.DTOs;
 
 namespace SATURNO_V2.Controllers;
 
@@ -16,7 +17,7 @@ public class TurnoController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<Turno>> Get()
+    public async Task<IEnumerable<TurnoDtoOut>> Get()
     {
         return await _service.GetAll();
     }

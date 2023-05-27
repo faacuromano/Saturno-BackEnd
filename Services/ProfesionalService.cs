@@ -20,6 +20,7 @@ public class ProfesionalService
     {
         return await _context.Profesionales.Select(t => new ProfesionalDto
         {
+            IdUsuarios = t.IdUsuariosNavigation.Id,
             Nombre = t.IdUsuariosNavigation.Nombre,
             Apellido = t.IdUsuariosNavigation.Apellido,
             Username = t.IdUsuariosNavigation.Username,
@@ -45,6 +46,7 @@ public class ProfesionalService
     {
         var professionalsToCut = await _context.Profesionales.Select(t => new ProfesionalDto
         {
+            IdUsuarios = t.IdUsuariosNavigation.Id,
             Nombre = t.IdUsuariosNavigation.Nombre,
             Apellido = t.IdUsuariosNavigation.Apellido,
             Username = t.IdUsuariosNavigation.Username,
@@ -71,6 +73,10 @@ public class ProfesionalService
     {
         return await _context.Profesionales.FindAsync(id);
     }
+    public async Task<Usuario?> GetUsuarioToDelete(int id)
+    {
+        return await _context.Usuarios.FindAsync(id);
+    }
 
     public async Task<ProfesionalDto?> GetById(int id)
     {
@@ -78,6 +84,7 @@ public class ProfesionalService
             .Where(p => p.IdUsuariosNavigation.Id == id)
             .Select(t => new ProfesionalDto
             {
+                IdUsuarios = t.IdUsuariosNavigation.Id,
                 Nombre = t.IdUsuariosNavigation.Nombre,
                 Apellido = t.IdUsuariosNavigation.Apellido,
                 Username = t.IdUsuariosNavigation.Username,
@@ -90,6 +97,7 @@ public class ProfesionalService
                 CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
                 TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
                 Descripcion = t.Descripcion,
+                Profesion = t.Profesion,
                 HorarioInicio = t.HorarioInicio,
                 HorarioFinal = t.HorarioFinal,
                 FotoBanner = t.FotoBanner,
@@ -115,6 +123,7 @@ public class ProfesionalService
                 CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
                 TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
                 Descripcion = t.Descripcion,
+                Profesion = t.Profesion,
                 HorarioInicio = t.HorarioInicio,
                 HorarioFinal = t.HorarioFinal,
                 FotoBanner = t.FotoBanner,
@@ -128,6 +137,7 @@ public class ProfesionalService
         profesionalNuevo.IdUsuariosNavigation.Pass = PH.hashPassword(profesionalNuevo.IdUsuariosNavigation.Pass);
         profesionalNuevo.IdUsuariosNavigation.Nombre = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Nombre);
         profesionalNuevo.IdUsuariosNavigation.Apellido = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Apellido);
+        profesionalNuevo.IdUsuariosNavigation.CreacionCuenta = DateTime.Today;
         _context.Profesionales.Add(profesionalNuevo);
 
         await _context.SaveChangesAsync();
@@ -135,7 +145,7 @@ public class ProfesionalService
         return profesionalNuevo;
     }
 
-    public async Task Update(int id, ProfesionalDtoIn profesionalDto)
+    public async Task Update(int id, ProfesionalDtoUpdate profesionalDto)
     {
         var profesionalExistente = await GetByIdToFunction(id);
 
@@ -146,18 +156,23 @@ public class ProfesionalService
             profesionalExistente.HorarioFinal = profesionalDto.HorarioFinal;
             profesionalExistente.FotoBanner = profesionalDto.FotoBanner;
             profesionalExistente.Direccion = profesionalDto.Direccion;
+            profesionalExistente.Profesion = profesionalDto.Profesion;
             profesionalExistente.IdUsuarios = profesionalDto.IdUsuarios;
+
 
             await _context.SaveChangesAsync();
         }
     }
     public async Task Delete(int id)
     {
-        var profesionalDelete = await GetByIdToFunction(id);
+        var profesionalToDelete = await GetByIdToFunction(id);
+        var usuarioDelete = await GetUsuarioToDelete(id);
 
-        if (profesionalDelete is not null)
+        if (profesionalToDelete is not null)
         {
-            _context.Profesionales.Remove(profesionalDelete);
+            _context.Profesionales.Remove(profesionalToDelete);
+            _context.Usuarios.Remove(usuarioDelete);
+
             await _context.SaveChangesAsync();
         }
     }

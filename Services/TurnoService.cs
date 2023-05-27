@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SATURNO_V2.Data;
+using SATURNO_V2.Data.DTOs;
 using SATURNO_V2.Data.SaturnoModels;
 
 namespace SATURNO_V2.Services;
@@ -14,16 +15,17 @@ public class TurnoService
         _context = context;
     }
 
-    public async Task<IEnumerable<Turno>> GetAll()
+    public async Task<IEnumerable<TurnoDtoOut>> GetAll()
     {
-        return await _context.Turnos.Select(t => new Turno
+        return await _context.Turnos.Select(t => new TurnoDtoOut
         {
-            IdClientes = t.IdClientes,
-            IdProfesionales = t.IdProfesionales,
-            IdServicios = t.IdServicios,
+            NombreCliente = t.IdClientesNavigation.IdUsuariosNavigation.Nombre + " " + t.IdClientesNavigation.IdUsuariosNavigation.Apellido,
+            NombreProfesional = t.IdProfesionalesNavigation.IdUsuariosNavigation.Nombre + " " + t.IdProfesionalesNavigation.IdUsuariosNavigation.Apellido,
+            NombreServicio = t.IdServiciosNavigation.Nombre,
+            Monto = t.IdServiciosNavigation.Precio,
             Observaciones = t.Observaciones,
             HoraTurno = t.HoraTurno,
-            FechaTurno = t.FechaTurno
+            FechaTurno = CutFecha(t.FechaTurno)
         }).ToListAsync();
 
     }
@@ -95,6 +97,13 @@ public class TurnoService
             _context.Turnos.Remove(ususarioDelete);
             await _context.SaveChangesAsync();
         }
+    }
+    public static string CutFecha(DateTime fecha)
+    {
+        string toParse = fecha.ToString();
+        string fechaParseada = toParse.Substring(0, toParse.Length - 12);
+
+        return fechaParseada;
     }
 
 }

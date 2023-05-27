@@ -39,6 +39,21 @@ public class ClienteController : ControllerBase
         }
     }
 
+    [HttpGet("{username}")]
+    public async Task<ActionResult<ClienteDto>> GetByUsername(string username)
+    {
+        var cliente = await _service.GetByUsername(username);
+
+        if (cliente is not null)
+        {
+            return cliente;
+        }
+        else
+        {
+            return NotFound();
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create(Cliente cliente)
     {

@@ -75,7 +75,7 @@ public class ProfesionalController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, ProfesionalDtoIn profesionalDtoIn)
+    public async Task<IActionResult> Update(int id, ProfesionalDtoUpdate profesionalDtoIn)
     {
         if (id != profesionalDtoIn.IdUsuarios)
         {

@@ -15,18 +15,18 @@ public partial class Turno
 
     public int IdServicios { get; set; }
 
-    public DateTime? FechaTurno { get; set; }
+    public DateTime FechaTurno { get; set; }
 
     public TimeSpan? HoraTurno { get; set; }
 
     public string? Observaciones { get; set; }
 
     [JsonIgnore]
-    public virtual Cliente IdClientesNavigation { get; set; } = null!;
+    public virtual Cliente? IdClientesNavigation { get; set; }
 
     [JsonIgnore]
-    public virtual Profesionale IdProfesionalesNavigation { get; set; } = null!;
+    public virtual Profesionale? IdProfesionalesNavigation { get; set; }
 
     [JsonIgnore]
-    public virtual Servicio IdServiciosNavigation { get; set; } = null!;
+    public virtual Servicio? IdServiciosNavigation { get; set; }
 }

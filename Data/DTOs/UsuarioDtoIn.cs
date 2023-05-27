@@ -1,6 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace SATURNO_V2.Data.DTOs;
 
 public class UsuarioDtoIn
