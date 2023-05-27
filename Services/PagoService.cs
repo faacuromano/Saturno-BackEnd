@@ -14,4 +14,18 @@ public class PagoService
         _context = context;
     }
 
+    public async Task<Profesionale?> GetByIdToFunction(int id)
+    {
+        return await _context.Profesionales.FindAsync(id);
+    }
+
+    public async Task<Profesionale?> Create(Profesionale profesionalNuevo)
+    {
+        _context.Profesionales.Add(profesionalNuevo);
+
+        await _context.SaveChangesAsync();
+
+        return profesionalNuevo;
+    }
+
 }
