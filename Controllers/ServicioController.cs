@@ -17,7 +17,7 @@ public class ServicioController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<Servicio>> Get()
+    public async Task<IEnumerable<ServicioDTO_getAll>> Get()
     {
         return await _service.GetAll();
     }
@@ -45,9 +45,6 @@ public class ServicioController : ControllerBase
 
         return servicio;
     }
-
-
-
 
     [HttpPost]
     public async Task<IActionResult> Create(Servicio servicio)

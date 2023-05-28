@@ -63,7 +63,7 @@ public class ProfesionalController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(Profesionale profesional)
     {
-        bool verficacion = VP.validateProfessional(profesional);
+        bool verficacion = VF.validateProfessional(profesional);
 
         if (verficacion is true)
         {
@@ -95,14 +95,6 @@ public class ProfesionalController : ControllerBase
 
         await _service.Update(id, profesionalDtoIn);
         return Ok();
-    }
-
-    [HttpGet("/profesionalServices/{id}")]
-    public async Task<IEnumerable<Servicio>> GetServiceToDelete(int id)
-    {
-        var servicio = await _service.GetServiceToDelete(id);
-
-        return servicio;
     }
 
     [HttpDelete]

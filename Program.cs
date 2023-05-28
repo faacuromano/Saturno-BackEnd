@@ -38,7 +38,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Profesional", policy => policy.RequireClaim("TipoUsuario", "P"));
+    options.AddPolicy("Profesional", policy => policy.RequireClaim("TipoCuenta", "P"));
 });
 
 var app = builder.Build();

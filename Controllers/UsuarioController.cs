@@ -44,22 +44,6 @@ public class UsuarioController : ControllerBase
 
     }
 
-    [HttpGet("2/{id}")]
-    public async Task<ActionResult<UsuarioDtoOut>> GetByIdToFunction(int id)
-    {
-        var usuario = await _service.GetByIdToFunction(id);
-
-        if (usuario is not null)
-        {
-            return usuario;
-        }
-        else
-        {
-            return NotFound();
-        }
-
-    }
-
     [HttpGet("login")]
     public async Task<ActionResult<Usuario>> Login(string username, string password)
     {
@@ -126,7 +110,7 @@ public class UsuarioController : ControllerBase
         {
             new Claim(ClaimTypes.Name, usuario.Username),
             new Claim(ClaimTypes.Email, usuario.Mail),
-            new Claim("TipoUsuario", usuario.TipoCuenta),
+            new Claim("TipoCuenta", usuario.TipoCuenta),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetSection("JWT:Key").Value));
@@ -134,7 +118,7 @@ public class UsuarioController : ControllerBase
 
         var securityToken = new JwtSecurityToken(
                             claims: claims,
-                            expires: DateTime.Now.AddMinutes(60),
+                            expires: DateTime.Now.AddHours(4),
                             signingCredentials: creds);
 
         string token = new JwtSecurityTokenHandler().WriteToken(securityToken);

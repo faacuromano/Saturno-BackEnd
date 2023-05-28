@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SATURNO_V2.Data;
+using SATURNO_V2.Data.DTOs;
 using SATURNO_V2.Data.SaturnoModels;
 
 namespace SATURNO_V2.Services;
@@ -14,10 +15,11 @@ public class ServicioService
         _context = context;
     }
 
-    public async Task<IEnumerable<Servicio>> GetAll()
+    public async Task<IEnumerable<ServicioDTO_getAll>> GetAll()
     {
-        return await _context.Servicios.Select(t => new Servicio
+        return await _context.Servicios.Select(t => new ServicioDTO_getAll
         {
+            Id = t.Id,
             Nombre = t.Nombre,
             Descripcion = t.Descripcion,
             Precio = t.Precio,
@@ -65,8 +67,9 @@ public class ServicioService
 
         if (servicioExistente is not null)
         {
-            servicioExistente.Descripcion = servicioDto.Descripcion;
             servicioExistente.Nombre = servicioDto.Nombre;
+            servicioExistente.Nombre = servicioDto.Nombre;
+            servicioExistente.Descripcion = servicioDto.Descripcion;
             servicioExistente.Precio = servicioDto.Precio;
             servicioExistente.Duracion = servicioDto.Duracion;
 
