@@ -150,7 +150,7 @@ public class ProfesionalService
         return profesionalNuevo;
     }
 
-    public async Task Update(int id, Profesionale profesionalDto)
+    public async Task Update(int id, ProfesionalDtoUpdate profesionalDto)
     {
         var profesionalExistente = await GetByIdToFunction(id);
 
