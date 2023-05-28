@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using SATURNO_V2.Services;
 using SATURNO_V2.Data.SaturnoModels;
 using SATURNO_V2.Data.DTOs;
+using SATURNO_V2.Functions;
 
 namespace SATURNO_V2.Controllers;
 
@@ -62,16 +63,26 @@ public class ProfesionalController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(Profesionale profesional)
     {
-        var profesionalNuevo = await _service.Create(profesional);
+        bool verficacion = VP.validateProfessional(profesional);
 
-        if (profesionalNuevo is not null)
+        if (verficacion is true)
         {
-            return CreatedAtAction(nameof(GetById), new { id = profesionalNuevo.IdUsuarios }, profesionalNuevo);
+            var profesionalNuevo = await _service.Create(profesional);
+
+            if (profesionalNuevo is not null)
+            {
+                return CreatedAtAction(nameof(GetById), new { id = profesionalNuevo.IdUsuarios }, profesionalNuevo);
+            }
+            else
+            {
+                return BadRequest("El objeto profesional se recibio como null.");
+            }
         }
         else
         {
-            return BadRequest();
+            return BadRequest("Uno o mas campos invalidos ingresados en la request.");
         }
+
     }
 
     [HttpPut("{id}")]
@@ -84,6 +95,14 @@ public class ProfesionalController : ControllerBase
 
         await _service.Update(id, profesionalDtoIn);
         return Ok();
+    }
+
+    [HttpGet("/profesionalServices/{id}")]
+    public async Task<IEnumerable<Servicio>> GetServiceToDelete(int id)
+    {
+        var servicio = await _service.GetServiceToDelete(id);
+
+        return servicio;
     }
 
     [HttpDelete]

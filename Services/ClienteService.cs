@@ -20,6 +20,7 @@ public class ClienteService
     {
         return await _context.Clientes.Select(t => new ClienteDto
         {
+            IdUsuarios = t.IdUsuariosNavigation.Id,
             Nombre = t.IdUsuariosNavigation.Nombre,
             Apellido = t.IdUsuariosNavigation.Apellido,
             Username = t.IdUsuariosNavigation.Username,
@@ -58,14 +59,12 @@ public class ClienteService
             })
             .FirstOrDefaultAsync();
     }
+
     public async Task<Cliente?> GetByIdToFunction(int id)
     {
         return await _context.Clientes.FindAsync(id);
     }
-    public async Task<Usuario?> GetUsuarioToDelete(int id)
-    {
-        return await _context.Usuarios.FindAsync(id);
-    }
+
     public async Task<ClienteDto?> GetByUsername(string username)
     {
         return await _context.Clientes
@@ -105,7 +104,7 @@ public class ClienteService
     public async Task Delete(int id)
     {
         var ClieteToDelete = await GetByIdToFunction(id);
-        var usuarioDelete = await GetUsuarioToDelete(id);
+        var usuarioDelete = await _context.Usuarios.FindAsync(id);
 
         if (ClieteToDelete is not null)
         {

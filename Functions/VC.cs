@@ -6,15 +6,14 @@ using SATURNO_V2.Services;
 
 namespace SATURNO_V2.Functions
 {
-    public class VP
+    public class VC
     {
-        public static bool validateProfessional(Profesionale profesionalToValidate)
+        public static bool validateCliente(Cliente clienteToValidate)
         {
-            bool mail = VerificarCorreo(profesionalToValidate.IdUsuariosNavigation.Mail);
-            bool ubicacion = VerificarUbicacion(profesionalToValidate.IdUsuariosNavigation.Ubicacion);
-            bool profesion = VerificarProfesion(profesionalToValidate.Profesion);
+            bool mail = VerificarCorreo(clienteToValidate.IdUsuariosNavigation.Mail);
+            bool ubicacion = VerificarUbicacion(clienteToValidate.IdUsuariosNavigation.Ubicacion);
 
-            if (mail is true && ubicacion is true && profesion is true)
+            if (mail is true && ubicacion is true)
             {
                 return true;
             }
@@ -23,30 +22,6 @@ namespace SATURNO_V2.Functions
                 return false;
             }
 
-        }
-
-        private static bool VerificarProfesion(string profesion)
-        {
-            List<string> listaServicios = new List<string>()
-            {
-                "Psicologo",
-                "Docente",
-                "Canchas de futbol",
-                "Peluquero",
-                "Medico",
-                "Estilista",
-                "Kinesiologo"
-            };
-
-            if (listaServicios.Contains(profesion))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-
-            }
         }
 
         private static bool VerificarUbicacion(string ubicacion)
@@ -61,8 +36,13 @@ namespace SATURNO_V2.Functions
             };
 
             if (listaUbicacion.Contains(ubicacion))
+            {
                 return true;
-            return false;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         static bool VerificarCorreo(string correo)

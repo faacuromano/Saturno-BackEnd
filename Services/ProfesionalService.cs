@@ -69,15 +69,6 @@ public class ProfesionalService
 
         return professionalsToCut.Take(n).ToArray();
     }
-    public async Task<Profesionale?> GetByIdToFunction(int id)
-    {
-        return await _context.Profesionales.FindAsync(id);
-    }
-    public async Task<Usuario?> GetUsuarioToDelete(int id)
-    {
-        return await _context.Usuarios.FindAsync(id);
-    }
-
     public async Task<ProfesionalDto?> GetById(int id)
     {
         return await _context.Profesionales
@@ -104,6 +95,19 @@ public class ProfesionalService
                 Direccion = t.Direccion,
             })
             .FirstOrDefaultAsync();
+    }
+    public async Task<Profesionale?> GetByIdToFunction(int id)
+    {
+        return await _context.Profesionales.FindAsync(id);
+    }
+    public async Task<Usuario?> GetUsuarioToDelete(int id)
+    {
+        return await _context.Usuarios.FindAsync(id);
+    }
+    public async Task<IEnumerable<Servicio>> GetServiceToDelete(int id)
+    {
+        return await _context.Servicios.Where(t => t.IdProfesionalNavigation.IdUsuariosNavigation.Id == id).ToListAsync();
+
     }
     public async Task<ProfesionalDto?> GetByUsername(string username)
     {
@@ -165,11 +169,13 @@ public class ProfesionalService
     }
     public async Task Delete(int id)
     {
+        var serviciosDelete = await GetServiceToDelete(id);
         var profesionalToDelete = await GetByIdToFunction(id);
         var usuarioDelete = await GetUsuarioToDelete(id);
 
         if (profesionalToDelete is not null)
         {
+            _context.Servicios.RemoveRange(serviciosDelete);
             _context.Profesionales.Remove(profesionalToDelete);
             _context.Usuarios.Remove(usuarioDelete);
 

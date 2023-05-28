@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using SATURNO_V2.Services;
 using SATURNO_V2.Data.SaturnoModels;
 using SATURNO_V2.Data.DTOs;
+using SATURNO_V2.Functions;
 
 namespace SATURNO_V2.Controllers;
 
@@ -57,15 +58,42 @@ public class ClienteController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(Cliente cliente)
     {
-        var clienteNuevo = await _service.Create(cliente);
+        bool clientIsValid = VC.validateCliente(cliente);
 
-        if (clienteNuevo is not null)
+
+        if (clientIsValid)
         {
-            return CreatedAtAction(nameof(GetById), new { id = clienteNuevo.IdUsuarios }, clienteNuevo);
+            var clienteNuevo = await _service.Create(cliente);
+
+            if (clienteNuevo is not null)
+            {
+                return CreatedAtAction(nameof(GetById), new { id = clienteNuevo.IdUsuarios }, clienteNuevo);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
         else
         {
-            return BadRequest();
+            return BadRequest("Uno o mas campos invalidos en la requiest");
+        }
+
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var clienteDelete = await _service.GetById(id);
+
+        if (clienteDelete is not null)
+        {
+            await _service.Delete(id);
+            return Ok();
+        }
+        else
+        {
+            return NotFound();
         }
     }
 
