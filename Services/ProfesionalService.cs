@@ -115,6 +115,7 @@ public class ProfesionalService
             .Where(p => p.IdUsuariosNavigation.Username == username)
             .Select(t => new ProfesionalDto
             {
+                IdUsuarios = t.IdUsuariosNavigation.Id,
                 Nombre = t.IdUsuariosNavigation.Nombre,
                 Apellido = t.IdUsuariosNavigation.Apellido,
                 Username = t.IdUsuariosNavigation.Username,
@@ -149,7 +150,7 @@ public class ProfesionalService
         return profesionalNuevo;
     }
 
-    public async Task Update(int id, ProfesionalDtoUpdate profesionalDto)
+    public async Task Update(int id, Profesionale profesionalDto)
     {
         var profesionalExistente = await GetByIdToFunction(id);
 
