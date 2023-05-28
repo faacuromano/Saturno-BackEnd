@@ -58,7 +58,7 @@ public class ClienteController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(Cliente cliente)
     {
-        bool clientIsValid = VC.validateCliente(cliente);
+        bool clientIsValid = VP.validateCliente(cliente);
 
 
         if (clientIsValid)

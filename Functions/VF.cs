@@ -6,7 +6,7 @@ using SATURNO_V2.Services;
 
 namespace SATURNO_V2.Functions
 {
-    public class VP
+    public class VF
     {
         public static bool validateProfessional(Profesionale profesionalToValidate)
         {
@@ -24,6 +24,23 @@ namespace SATURNO_V2.Functions
             }
 
         }
+
+        public static bool validateCliente(Cliente clienteToValidate)
+        {
+            bool mail = VerificarCorreo(clienteToValidate.IdUsuariosNavigation.Mail);
+            bool ubicacion = VerificarUbicacion(clienteToValidate.IdUsuariosNavigation.Ubicacion);
+
+            if (mail is true && ubicacion is true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
 
         private static bool VerificarProfesion(string profesion)
         {

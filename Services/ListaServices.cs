@@ -14,7 +14,6 @@ public class ListaServices
 
     public List<string> GetRubro()
     {
-
         List<string> servicios = new List<string>()
         {
             "Psicologo",
