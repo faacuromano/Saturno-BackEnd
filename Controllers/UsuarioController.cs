@@ -43,22 +43,6 @@ public class UsuarioController : ControllerBase
         }
     }
 
-    [HttpGet("{username}")]
-    public async Task<ActionResult<Usuario>> GetByUsername(string username)
-    {
-        var usuario = await _service.GetByUsername(username);
-
-        if (usuario is not null)
-        {
-            return usuario;
-        }
-        else
-        {
-            return NotFound();
-        }
-
-    }
-
     [HttpGet("login")]
     public async Task<ActionResult<Usuario>> Login(string username, string password)
     {
@@ -75,16 +59,6 @@ public class UsuarioController : ControllerBase
         }
     }
 
-
-    [HttpPost]
-    public async Task<IActionResult> Create(UsuarioDtoIn usuario)
-    {
-        var usuarioNuevo = await _service.Create(usuario);
-
-        return CreatedAtAction(nameof(GetById), new { id = usuarioNuevo.Id }, usuarioNuevo);
-
-    }
-
     [HttpPut("{username}")]
     public async Task<IActionResult> Update(string username, UsuarioDtoOut usuario)
     {
@@ -99,23 +73,6 @@ public class UsuarioController : ControllerBase
         else
         {
             return NotFound("Hubo un error al realizar los cambios");
-        }
-    }
-
-
-    [HttpDelete]
-    public async Task<IActionResult> Delete(int id)
-    {
-        var usuarioDelete = await _service.GetById(id);
-
-        if (usuarioDelete is not null)
-        {
-            await _service.Delete(id);
-            return Ok();
-        }
-        else
-        {
-            return NotFound();
         }
     }
 
