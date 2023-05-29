@@ -34,7 +34,7 @@ public partial class Usuario
     public bool Verificado { get; set; }
 
     [JsonIgnore]
-    public string TipoCuenta { get; set; } = null!;
+    public string? TipoCuenta { get; set; }
 
     [JsonIgnore]
     public virtual Cliente? Cliente { get; set; }
