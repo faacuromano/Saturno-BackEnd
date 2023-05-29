@@ -44,21 +44,6 @@ public class ProfesionalController : ControllerBase
         }
 
     }
-    [HttpGet("id/{id}")]
-    public async Task<ActionResult<ProfesionalDto>> GetById(int id)
-    {
-        var profesional = await _service.GetById(id);
-
-        if (profesional is not null)
-        {
-            return profesional;
-        }
-        else
-        {
-            return NotFound();
-        }
-
-    }
 
     [HttpPost]
     public async Task<IActionResult> Create(Profesionale profesional)
@@ -71,7 +56,7 @@ public class ProfesionalController : ControllerBase
 
             if (profesionalNuevo is not null)
             {
-                return CreatedAtAction(nameof(GetById), new { id = profesionalNuevo.IdUsuarios }, profesionalNuevo);
+                return CreatedAtAction(nameof(GetByUsername), new { username = profesionalNuevo.IdUsuariosNavigation.Username }, profesionalNuevo);
             }
             else
             {
@@ -100,7 +85,7 @@ public class ProfesionalController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> Delete(int id)
     {
-        var profesionalDelete = await _service.GetById(id);
+        var profesionalDelete = await _service.GetByIdToFunction(id);
 
         if (profesionalDelete is not null)
         {

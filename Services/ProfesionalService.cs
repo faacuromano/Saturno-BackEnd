@@ -27,13 +27,14 @@ public class ProfesionalService
             Mail = t.IdUsuariosNavigation.Mail,
             Pass = t.IdUsuariosNavigation.Pass,
             NumTelefono = t.IdUsuariosNavigation.NumTelefono,
-            FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento,
+            FechaNacimiento = FP.FechaParse(t.IdUsuariosNavigation.FechaNacimiento),
             FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
             Verificado = t.IdUsuariosNavigation.Verificado,
-            CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
+            CreacionCuenta = FP.FechaParse(t.IdUsuariosNavigation.CreacionCuenta),
             TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
             Ubicacion = t.IdUsuariosNavigation.Ubicacion,
             Descripcion = t.Descripcion,
+            Profesion = t.Profesion,
             HorarioInicio = t.HorarioInicio,
             HorarioFinal = t.HorarioFinal,
             Direccion = t.Direccion,
@@ -53,13 +54,14 @@ public class ProfesionalService
             Mail = t.IdUsuariosNavigation.Mail,
             Pass = t.IdUsuariosNavigation.Pass,
             NumTelefono = t.IdUsuariosNavigation.NumTelefono,
-            FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento,
+            FechaNacimiento = FP.FechaParse(t.IdUsuariosNavigation.FechaNacimiento),
             FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
             Verificado = t.IdUsuariosNavigation.Verificado,
-            CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
+            CreacionCuenta = FP.FechaParse(t.IdUsuariosNavigation.CreacionCuenta),
             TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
             Ubicacion = t.IdUsuariosNavigation.Ubicacion,
             Descripcion = t.Descripcion,
+            Profesion = t.Profesion,
             HorarioInicio = t.HorarioInicio,
             HorarioFinal = t.HorarioFinal,
             Direccion = t.Direccion,
@@ -68,33 +70,6 @@ public class ProfesionalService
         }).ToListAsync();
 
         return professionalsToCut.Take(n).ToArray();
-    }
-    public async Task<ProfesionalDto?> GetById(int id)
-    {
-        return await _context.Profesionales
-            .Where(p => p.IdUsuariosNavigation.Id == id)
-            .Select(t => new ProfesionalDto
-            {
-                IdUsuarios = t.IdUsuariosNavigation.Id,
-                Nombre = t.IdUsuariosNavigation.Nombre,
-                Apellido = t.IdUsuariosNavigation.Apellido,
-                Username = t.IdUsuariosNavigation.Username,
-                Mail = t.IdUsuariosNavigation.Mail,
-                Pass = t.IdUsuariosNavigation.Pass,
-                NumTelefono = t.IdUsuariosNavigation.NumTelefono,
-                FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento,
-                FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
-                Verificado = t.IdUsuariosNavigation.Verificado,
-                CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
-                TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
-                Descripcion = t.Descripcion,
-                Profesion = t.Profesion,
-                HorarioInicio = t.HorarioInicio,
-                HorarioFinal = t.HorarioFinal,
-                FotoBanner = t.FotoBanner,
-                Direccion = t.Direccion,
-            })
-            .FirstOrDefaultAsync();
     }
     public async Task<Profesionale?> GetByIdToFunction(int id)
     {
@@ -106,7 +81,8 @@ public class ProfesionalService
     }
     public async Task<IEnumerable<Servicio>> GetServiceToDelete(int id)
     {
-        return await _context.Servicios.Where(t => t.IdProfesionalNavigation.IdUsuariosNavigation.Id == id).ToListAsync();
+        return await _context.Servicios.Where(t => t.IdProfesionalNavigation != null &&
+        t.IdProfesionalNavigation.IdUsuariosNavigation.Id == id).ToListAsync();
 
     }
     public async Task<ProfesionalDto?> GetByUsername(string username)
@@ -122,10 +98,10 @@ public class ProfesionalService
                 Mail = t.IdUsuariosNavigation.Mail,
                 Pass = t.IdUsuariosNavigation.Pass,
                 NumTelefono = t.IdUsuariosNavigation.NumTelefono,
-                FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento,
+                FechaNacimiento = FP.FechaParse(t.IdUsuariosNavigation.FechaNacimiento),
                 FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
                 Verificado = t.IdUsuariosNavigation.Verificado,
-                CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
+                CreacionCuenta = FP.FechaParse(t.IdUsuariosNavigation.CreacionCuenta),
                 TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
                 Descripcion = t.Descripcion,
                 Profesion = t.Profesion,
@@ -175,7 +151,7 @@ public class ProfesionalService
         var profesionalToDelete = await GetByIdToFunction(id);
         var usuarioDelete = await GetUsuarioToDelete(id);
 
-        if (profesionalToDelete is not null)
+        if (profesionalToDelete is not null && usuarioDelete is not null)
         {
             _context.Servicios.RemoveRange(serviciosDelete);
             _context.Profesionales.Remove(profesionalToDelete);

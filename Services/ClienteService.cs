@@ -27,37 +27,14 @@ public class ClienteService
             Mail = t.IdUsuariosNavigation.Mail,
             Pass = t.IdUsuariosNavigation.Pass,
             NumTelefono = t.IdUsuariosNavigation.NumTelefono,
-            FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento,
+            FechaNacimiento = FP.FechaParse(t.IdUsuariosNavigation.FechaNacimiento),
             FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
             Verificado = t.IdUsuariosNavigation.Verificado,
-            CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
+            CreacionCuenta = FP.FechaParse(t.IdUsuariosNavigation.CreacionCuenta),
             TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
             Ubicacion = t.IdUsuariosNavigation.Ubicacion
         }).ToListAsync();
 
-    }
-
-    public async Task<ClienteDto?> GetById(int id)
-    {
-        return await _context.Profesionales
-            .Where(p => p.IdUsuariosNavigation.Id == id)
-            .Select(t => new ClienteDto
-            {
-                IdUsuarios = t.IdUsuariosNavigation.Id,
-                Nombre = t.IdUsuariosNavigation.Nombre,
-                Apellido = t.IdUsuariosNavigation.Apellido,
-                Username = t.IdUsuariosNavigation.Username,
-                Mail = t.IdUsuariosNavigation.Mail,
-                Pass = t.IdUsuariosNavigation.Pass,
-                NumTelefono = t.IdUsuariosNavigation.NumTelefono,
-                FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento,
-                FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
-                Verificado = t.IdUsuariosNavigation.Verificado,
-                CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
-                Ubicacion = t.IdUsuariosNavigation.Ubicacion,
-                TipoCuenta = t.IdUsuariosNavigation.TipoCuenta
-            })
-            .FirstOrDefaultAsync();
     }
 
     public async Task<Cliente?> GetByIdToFunction(int id)
@@ -78,12 +55,25 @@ public class ClienteService
                 Mail = t.IdUsuariosNavigation.Mail,
                 Pass = t.IdUsuariosNavigation.Pass,
                 NumTelefono = t.IdUsuariosNavigation.NumTelefono,
-                FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento,
+                FechaNacimiento = FP.FechaParse(t.IdUsuariosNavigation.FechaNacimiento),
                 FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
                 Verificado = t.IdUsuariosNavigation.Verificado,
-                CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
+                CreacionCuenta = FP.FechaParse(t.IdUsuariosNavigation.CreacionCuenta),
                 Ubicacion = t.IdUsuariosNavigation.Ubicacion,
                 TipoCuenta = t.IdUsuariosNavigation.TipoCuenta
+            })
+            .FirstOrDefaultAsync();
+    }
+    public async Task<ClientePerfilDto?> GetPerfilCliente(string username)
+    {
+        return await _context.Clientes
+            .Where(p => p.IdUsuariosNavigation.Username == username)
+            .Select(t => new ClientePerfilDto
+            {
+                Nombre = t.IdUsuariosNavigation.Nombre,
+                Apellido = t.IdUsuariosNavigation.Apellido,
+                Ubicacion = t.IdUsuariosNavigation.Ubicacion,
+                FotoPerfil = t.IdUsuariosNavigation.FotoPerfil
             })
             .FirstOrDefaultAsync();
     }
@@ -107,7 +97,7 @@ public class ClienteService
         var ClieteToDelete = await GetByIdToFunction(id);
         var usuarioDelete = await _context.Usuarios.FindAsync(id);
 
-        if (ClieteToDelete is not null)
+        if (ClieteToDelete is not null && usuarioDelete is not null)
         {
             _context.Clientes.Remove(ClieteToDelete);
             _context.Usuarios.Remove(usuarioDelete);

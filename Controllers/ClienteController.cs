@@ -24,11 +24,10 @@ public class ClienteController : ControllerBase
         return await _service.GetAll();
     }
 
-
-    [HttpGet("id/{id}")]
-    public async Task<ActionResult<ClienteDto>> GetById(int id)
+    [HttpGet("{username}")]
+    public async Task<ActionResult<ClienteDto>> GetByUsername(string username)
     {
-        var cliente = await _service.GetById(id);
+        var cliente = await _service.GetByUsername(username);
 
         if (cliente is not null)
         {
@@ -40,10 +39,10 @@ public class ClienteController : ControllerBase
         }
     }
 
-    [HttpGet("{username}")]
-    public async Task<ActionResult<ClienteDto>> GetByUsername(string username)
+    [HttpGet("/perfilDe/{username}")]
+    public async Task<ActionResult<ClientePerfilDto>> GetPerfil(string username)
     {
-        var cliente = await _service.GetByUsername(username);
+        var cliente = await _service.GetPerfilCliente(username);
 
         if (cliente is not null)
         {
@@ -67,7 +66,7 @@ public class ClienteController : ControllerBase
 
             if (clienteNuevo is not null)
             {
-                return CreatedAtAction(nameof(GetById), new { id = clienteNuevo.IdUsuarios }, clienteNuevo);
+                return CreatedAtAction(nameof(GetByUsername), new { username = clienteNuevo.IdUsuariosNavigation.Username }, clienteNuevo);
             }
             else
             {
@@ -84,7 +83,7 @@ public class ClienteController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> Delete(int id)
     {
-        var clienteDelete = await _service.GetById(id);
+        var clienteDelete = await _service.GetByIdToFunction(id);
 
         if (clienteDelete is not null)
         {

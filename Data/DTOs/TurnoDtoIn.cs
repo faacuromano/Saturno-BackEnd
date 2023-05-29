@@ -1,14 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace SATURNO_V2.Data.SaturnoModels;
 
-public partial class Turno
+public partial class TurnoDtoIn
 {
-    [JsonIgnore]
-    public int Id { get; set; }
-
     public int IdClientes { get; set; }
 
     public int IdProfesionales { get; set; }
@@ -20,13 +17,4 @@ public partial class Turno
     public TimeSpan? HoraTurno { get; set; }
 
     public string? Observaciones { get; set; }
-
-    [JsonIgnore]
-    public virtual Cliente IdClientesNavigation { get; set; } = null!;
-
-    [JsonIgnore]
-    public virtual Profesionale IdProfesionalesNavigation { get; set; } = null!;
-
-    [JsonIgnore]
-    public virtual Servicio IdServiciosNavigation { get; set; } = null!;
 }

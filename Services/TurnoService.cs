@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SATURNO_V2.Data;
 using SATURNO_V2.Data.DTOs;
 using SATURNO_V2.Data.SaturnoModels;
+using SATURNO_V2.Functions;
 
 namespace SATURNO_V2.Services;
 
@@ -19,30 +20,21 @@ public class TurnoService
     {
         return await _context.Turnos.Select(t => new TurnoDtoOut
         {
-            NombreCliente = t.IdClientesNavigation.IdUsuariosNavigation.Nombre + " " + t.IdClientesNavigation.IdUsuariosNavigation.Apellido,
-            NombreProfesional = t.IdProfesionalesNavigation.IdUsuariosNavigation.Nombre + " " + t.IdProfesionalesNavigation.IdUsuariosNavigation.Apellido,
+            NombreCliente = t.IdClientesNavigation.IdUsuariosNavigation.Nombre
+                            + " "
+                            + t.IdClientesNavigation.IdUsuariosNavigation.Apellido,
+
+            NombreProfesional = t.IdProfesionalesNavigation.IdUsuariosNavigation.Nombre
+                                + " "
+                                + t.IdProfesionalesNavigation.IdUsuariosNavigation.Apellido,
+
             NombreServicio = t.IdServiciosNavigation.Nombre,
             Monto = t.IdServiciosNavigation.Precio,
             Observaciones = t.Observaciones,
             HoraTurno = t.HoraTurno,
-            FechaTurno = CutFecha(t.FechaTurno)
+            FechaTurno = FP.FechaParse(t.FechaTurno)
         }).ToListAsync();
 
-    }
-
-    public async Task<IEnumerable<Turno>> GetFour(int n)
-    {
-        var professionalsToCut = await _context.Turnos.Select(t => new Turno
-        {
-            IdClientes = t.IdClientes,
-            IdProfesionales = t.IdProfesionales,
-            IdServicios = t.IdServicios,
-            Observaciones = t.Observaciones,
-            HoraTurno = t.HoraTurno,
-            FechaTurno = t.FechaTurno
-        }).ToListAsync();
-
-        return professionalsToCut.Take(n).ToArray();
     }
 
     public async Task<Turno?> GetByIdToFunction(int id)
@@ -50,21 +42,39 @@ public class TurnoService
         return await _context.Turnos.FindAsync(id);
     }
 
-    public async Task<Turno?> GetById(int id)
+    public async Task<IEnumerable<TurnoDtoOut?>> GetByProfesional(string username)
     {
         return await _context.Turnos
-            .Where(p => p.Id == id)
-            .FirstOrDefaultAsync();
-    }
-    public async Task<Turno?> GetByProfesional(string username)
-    {
-        return await _context.Turnos
-            .Where(p => p.IdProfesionalesNavigation.IdUsuariosNavigation.Username == username)
-            .FirstOrDefaultAsync();
+            .Where(p => p.IdProfesionalesNavigation != null && p.IdProfesionalesNavigation.IdUsuariosNavigation.Username == username ||
+                         p.IdClientesNavigation != null && p.IdClientesNavigation.IdUsuariosNavigation.Username == username)
+            .Select(t => new TurnoDtoOut
+            {
+                NombreCliente = t.IdClientesNavigation.IdUsuariosNavigation.Nombre
+                                + " "
+                                + t.IdClientesNavigation.IdUsuariosNavigation.Apellido,
+
+                NombreProfesional = t.IdProfesionalesNavigation.IdUsuariosNavigation.Nombre
+                                    + " "
+                                    + t.IdProfesionalesNavigation.IdUsuariosNavigation.Apellido,
+
+                NombreServicio = t.IdServiciosNavigation.Nombre,
+                Monto = t.IdServiciosNavigation.Precio,
+                Observaciones = t.Observaciones,
+                HoraTurno = t.HoraTurno,
+                FechaTurno = FP.FechaParse(t.FechaTurno)
+            })
+            .ToListAsync();
     }
 
-    public async Task<Turno?> Create(Turno turnoNuevo)
+    public async Task<Turno?> Create(TurnoDtoIn turnoNuevoDTO)
     {
+        var turnoNuevo = new Turno();
+        turnoNuevo.FechaTurno = turnoNuevoDTO.FechaTurno;
+        turnoNuevo.HoraTurno = turnoNuevoDTO.HoraTurno;
+        turnoNuevo.Observaciones = turnoNuevoDTO.Observaciones;
+        turnoNuevo.IdProfesionales = turnoNuevoDTO.IdProfesionales;
+        turnoNuevo.IdClientes = turnoNuevoDTO.IdClientes;
+        turnoNuevo.IdServicios = turnoNuevoDTO.IdServicios;
         _context.Turnos.Add(turnoNuevo);
 
         await _context.SaveChangesAsync();
@@ -98,12 +108,4 @@ public class TurnoService
             await _context.SaveChangesAsync();
         }
     }
-    public static string CutFecha(DateTime fecha)
-    {
-        string toParse = fecha.ToString();
-        string fechaParseada = toParse.Substring(0, toParse.Length - 12);
-
-        return fechaParseada;
-    }
-
 }

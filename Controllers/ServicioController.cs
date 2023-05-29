@@ -22,22 +22,6 @@ public class ServicioController : ControllerBase
         return await _service.GetAll();
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Servicio>> GetById(int id)
-    {
-        var servicio = await _service.GetById(id);
-
-        if (servicio is not null)
-        {
-            return servicio;
-        }
-        else
-        {
-            return NotFound();
-        }
-
-    }
-
     [HttpGet("/serviciosDe/{username}")]
     public async Task<IEnumerable<Servicio>> GetByProfesional(string username)
     {
@@ -53,7 +37,7 @@ public class ServicioController : ControllerBase
 
         if (servicioNuevo is not null)
         {
-            return CreatedAtAction(nameof(GetById), new { id = servicioNuevo.Id }, servicioNuevo);
+            return Ok(servicioNuevo);
         }
         else
         {

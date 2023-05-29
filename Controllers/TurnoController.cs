@@ -22,46 +22,37 @@ public class TurnoController : ControllerBase
         return await _service.GetAll();
     }
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Turno>> GetById(int id)
-    {
-        var turno = await _service.GetById(id);
-
-        if (turno is not null)
-        {
-            return turno;
-        }
-        else
-        {
-            return NotFound();
-        }
-
-    }
-
     [HttpGet("/turnosDe/{username}")]
-    public async Task<ActionResult<Turno>> GetByProfesional(string username)
+    public async Task<ActionResult<IEnumerable<TurnoDtoOut?>>> GetByProfesional(string username)
     {
         var turno = await _service.GetByProfesional(username);
 
-        // if (turno is not null)
-        // {
-        return turno;
-        // }
-        // else
-        // {
-        //     return NotFound();
-        // }
+        if (turno is not null)
+        {
+            if (turno.Count() > 0)
+            {
+                return Ok(turno);
+            }
+            else
+            {
+                return BadRequest(new { error = "No se encontraron turnos para el usuario especificado." });
+            }
+        }
+        else
+        {
+            return BadRequest(new { error = "Turno es null." });
 
+        }
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(Turno turno)
+    public async Task<IActionResult> Create(TurnoDtoIn turno)
     {
         var turnoNuevo = await _service.Create(turno);
 
         if (turnoNuevo is not null)
         {
-            return CreatedAtAction(nameof(GetById), new { id = turnoNuevo.Id }, turnoNuevo);
+            return Ok(turnoNuevo);
         }
         else
         {
@@ -84,7 +75,7 @@ public class TurnoController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> Delete(int id)
     {
-        var turnoDelete = await _service.GetById(id);
+        var turnoDelete = await _service.GetByIdToFunction(id);
 
         if (turnoDelete is not null)
         {
