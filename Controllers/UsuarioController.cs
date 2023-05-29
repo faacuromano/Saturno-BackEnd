@@ -28,10 +28,25 @@ public class UsuarioController : ControllerBase
         return await _service.GetAll();
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("/getId/{id}")]
     public async Task<ActionResult<Usuario>> GetById(int id)
     {
         var usuario = await _service.GetById(id);
+
+        if (usuario is not null)
+        {
+            return usuario;
+        }
+        else
+        {
+            return NotFound();
+        }
+    }
+
+    [HttpGet("{username}")]
+    public async Task<ActionResult<Usuario>> GetByUsername(string username)
+    {
+        var usuario = await _service.GetByUsername(username);
 
         if (usuario is not null)
         {
