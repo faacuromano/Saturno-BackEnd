@@ -93,6 +93,7 @@ public class ClienteService
         clienteNuevo.IdUsuariosNavigation.Pass = PH.hashPassword(clienteNuevo.IdUsuariosNavigation.Pass);
         clienteNuevo.IdUsuariosNavigation.Nombre = NN.ConvertirNombre(clienteNuevo.IdUsuariosNavigation.Nombre);
         clienteNuevo.IdUsuariosNavigation.Apellido = NN.ConvertirNombre(clienteNuevo.IdUsuariosNavigation.Apellido);
+        clienteNuevo.IdUsuariosNavigation.TipoCuenta = "C";
         clienteNuevo.IdUsuariosNavigation.CreacionCuenta = DateTime.Now;
         _context.Clientes.Add(clienteNuevo);
 

@@ -26,6 +26,12 @@ public class UsuarioService
     {
         return await _context.Usuarios.FindAsync(id);
     }
+    public async Task<Usuario?> GetByUsername(string username)
+    {
+        return await _context.Usuarios
+        .Where(p => p.Username == username)
+        .FirstOrDefaultAsync();
+    }
 
     public async Task<UsuarioDtoOut?> GetByIdToFunction(int id)
     {
@@ -70,13 +76,12 @@ public class UsuarioService
         return nuevoUsuario;
     }
 
-    public async Task Update(int id, UsuarioDtoOut usuario)
+    public async Task Update(string username, UsuarioDtoOut usuario)
     {
-        var usuarioExistente = await GetById(id);
+        var usuarioExistente = await GetByUsername(username);
 
         if (usuarioExistente is not null)
         {
-            usuarioExistente.Id = usuario.Id;
             usuarioExistente.Nombre = NN.ConvertirNombre(usuario.Nombre);
             usuarioExistente.Apellido = NN.ConvertirNombre(usuario.Apellido);
             usuarioExistente.Username = usuario.Username;

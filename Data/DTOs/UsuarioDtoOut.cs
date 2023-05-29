@@ -5,7 +5,6 @@ namespace SATURNO_V2.Data.DTOs;
 
 public class UsuarioDtoOut
 {
-    public int Id { get; set; }
     public string Nombre { get; set; } = null!;
 
     public string Apellido { get; set; } = null!;

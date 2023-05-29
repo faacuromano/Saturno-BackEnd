@@ -70,15 +70,15 @@ public class UsuarioController : ControllerBase
 
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, UsuarioDtoOut usuario)
+    [HttpPut("{username}")]
+    public async Task<IActionResult> Update(string username, UsuarioDtoOut usuario)
     {
 
-        var usuarioUpdate = await _service.GetByIdToFunction(id);
+        var usuarioUpdate = await _service.GetByUsername(username);
 
         if (usuarioUpdate is not null)
         {
-            await _service.Update(id, usuario);
+            await _service.Update(username, usuario);
             return Ok("Los cambios se han aplicado");
         }
         else
