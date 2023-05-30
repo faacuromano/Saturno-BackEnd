@@ -85,11 +85,32 @@ public class UsuarioService
             usuarioExistente.Nombre = NN.ConvertirNombre(usuario.Nombre);
             usuarioExistente.Apellido = NN.ConvertirNombre(usuario.Apellido);
             usuarioExistente.Username = usuario.Username;
-            usuarioExistente.Mail = VerificarCorreo(usuario.Mail);
             usuarioExistente.Ubicacion = usuario.Ubicacion;
             usuarioExistente.NumTelefono = usuario.NumTelefono;
             usuarioExistente.FechaNacimiento = usuario.FechaNacimiento;
 
+
+            await _context.SaveChangesAsync();
+        }
+    }
+    public async Task UpdateMail(string username, UsuarioUpdateMailDTO usuario)
+    {
+        var usuarioExistente = await GetByUsername(username);
+
+        if (usuarioExistente is not null)
+        {
+            usuarioExistente.Mail = VerificarCorreo(usuario.Mail);
+
+            await _context.SaveChangesAsync();
+        }
+    }
+    public async Task UpdatePassword(string username, UsuarioUpdatePasswordDTO usuario)
+    {
+        var usuarioExistente = await GetByUsername(username);
+
+        if (usuarioExistente is not null)
+        {
+            usuarioExistente.Pass = PH.hashPassword(usuario.NewPass);
 
             await _context.SaveChangesAsync();
         }

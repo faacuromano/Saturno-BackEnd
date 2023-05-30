@@ -6,6 +6,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
+using SATURNO_V2.Functions;
 
 namespace SATURNO_V2.Controllers;
 
@@ -73,6 +74,41 @@ public class UsuarioController : ControllerBase
         else
         {
             return NotFound("Hubo un error al realizar los cambios");
+        }
+    }
+    [HttpPut("updateMail/{username}")]
+    public async Task<IActionResult> UpdateMail(string username, UsuarioUpdateMailDTO usuario)
+    {
+
+        var usuarioUpdate = await _service.GetByUsername(username);
+
+        if (usuarioUpdate is not null)
+        {
+            await _service.UpdateMail(username, usuario);
+            return Ok("Mail cambiado con exito.");
+        }
+        else
+        {
+            return NotFound("Hubo un error al realizar los cambios. Revise el campo email");
+        }
+    }
+
+    [HttpPut("updatePassword/{username}")]
+    public async Task<IActionResult> UpdatePassword(string username, UsuarioUpdatePasswordDTO usuario)
+    {
+        var usuarioUpdate = await _service.GetByUsername(username);
+        var oldPassword = PH.hashPassword(usuario.OldPass);
+
+        if (usuarioUpdate is not null
+            && usuarioUpdate.Pass == oldPassword
+            && usuario.NewPass == usuario.SameNew)
+        {
+            await _service.UpdatePassword(username, usuario);
+            return Ok("Contraseña cambiada con exito.");
+        }
+        else
+        {
+            return NotFound("Hubo un error al realizar los cambios. Revise el campo email");
         }
     }
 
