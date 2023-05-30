@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using SATURNO_V2.Data.SaturnoModels;
 
-namespace SATURNO_V2.Data.DTOs;
+namespace SATURNO_V2.Data.DTOs.ProfesionalDTO;
 
 public class Profesional_Servicios_DTO
 {

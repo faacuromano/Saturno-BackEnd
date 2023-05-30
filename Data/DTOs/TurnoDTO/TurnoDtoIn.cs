@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace SATURNO_V2.Data.SaturnoModels;
+namespace SATURNO_V2.Data.DTOs.TurnoDTO;
 
 public partial class TurnoDtoIn
 {

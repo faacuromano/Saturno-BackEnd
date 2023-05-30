@@ -1,11 +1,9 @@
-using System.Text.Json.Serialization;
-
-namespace SATURNO_V2.Data.DTOs;
+namespace SATURNO_V2.Data.DTOs.ProfesionalDTO;
 
 public class ProfesionalCreateDtoIn
 {
     public int IdUsuarios { get; set; }
-    
+
     public string? Descripcion { get; set; }
 
     public TimeSpan? HorarioInicio { get; set; }

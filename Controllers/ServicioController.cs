@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SATURNO_V2.Services;
 using SATURNO_V2.Data.SaturnoModels;
-using SATURNO_V2.Data.DTOs;
+using SATURNO_V2.Data.DTOs.ServicioDTO;
 
 namespace SATURNO_V2.Controllers;
 

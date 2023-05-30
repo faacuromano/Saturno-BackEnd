@@ -1,4 +1,4 @@
-namespace SATURNO_V2.Data.DTOs;
+namespace SATURNO_V2.Data.DTOs.TurnoDTO;
 
 public partial class TurnoDtoOut
 {

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SATURNO_V2.Data;
 using SATURNO_V2.Data.DTOs;
+using SATURNO_V2.Data.DTOs.ServicioDTO;
 using SATURNO_V2.Data.SaturnoModels;
 
 namespace SATURNO_V2.Services;
@@ -42,7 +43,8 @@ public class ServicioService
 
     public async Task<IEnumerable<Servicio>> GetByProfesional(string username)
     {
-        return await _context.Servicios.Where(a => a.IdProfesionalNavigation.IdUsuariosNavigation.Username == username).Select(a => new Servicio
+        return await _context.Servicios.Where(a => a.IdProfesionalNavigation != null
+        && a.IdProfesionalNavigation.IdUsuariosNavigation.Username == username).Select(a => new Servicio
         {
             IdProfesional = a.IdProfesional,
             Nombre = a.Nombre,
@@ -67,7 +69,6 @@ public class ServicioService
 
         if (servicioExistente is not null)
         {
-            servicioExistente.Nombre = servicioDto.Nombre;
             servicioExistente.Nombre = servicioDto.Nombre;
             servicioExistente.Descripcion = servicioDto.Descripcion;
             servicioExistente.Precio = servicioDto.Precio;

@@ -32,9 +32,9 @@ public class ListaServices
         List<string> ubicaciones = new List<string>()
         {
             "Rosario",
-            "Arroyo seco",
+            "Arroyo Seco",
             "Funes",
-            "Villa gobernador Galvez",
+            "Villa Gobernador Galvez",
             "Roldan"
         };
         return ubicaciones;

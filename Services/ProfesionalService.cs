@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using SATURNO_V2.Data;
 using SATURNO_V2.Data.SaturnoModels;
-using SATURNO_V2.Data.DTOs;
 using SATURNO_V2.Functions;
+using SATURNO_V2.Data.DTOs.ProfesionalDTO;
 
 namespace SATURNO_V2.Services;
 
@@ -34,7 +34,7 @@ public class ProfesionalService
             TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
             Ubicacion = t.IdUsuariosNavigation.Ubicacion,
             Descripcion = t.Descripcion,
-            Profesion = t.Profesion,
+            Profesion = NN.ConvertirNombre(t.Profesion!),
             HorarioInicio = t.HorarioInicio,
             HorarioFinal = t.HorarioFinal,
             Direccion = t.Direccion,
@@ -140,7 +140,6 @@ public class ProfesionalService
             profesionalExistente.Direccion = profesionalDto.Direccion;
             profesionalExistente.Profesion = profesionalDto.Profesion;
             profesionalExistente.IdUsuarios = profesionalDto.IdUsuarios;
-
 
             await _context.SaveChangesAsync();
         }

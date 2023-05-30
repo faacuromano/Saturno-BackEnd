@@ -45,7 +45,7 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpGet("login")]
-    public async Task<ActionResult<Usuario>> Login(string username, string password)
+    public async Task<ActionResult<UsuarioDtoOut>> Login(string username, string password)
     {
         var user = await _service.Login(username, password);
 
@@ -76,20 +76,29 @@ public class UsuarioController : ControllerBase
             return NotFound("Hubo un error al realizar los cambios");
         }
     }
+
     [HttpPut("updateMail/{username}")]
     public async Task<IActionResult> UpdateMail(string username, UsuarioUpdateMailDTO usuario)
     {
-
         var usuarioUpdate = await _service.GetByUsername(username);
+        var isValid = UsuarioService.VerificarCorreo(usuario.Mail);
 
         if (usuarioUpdate is not null)
         {
-            await _service.UpdateMail(username, usuario);
-            return Ok("Mail cambiado con exito.");
+            if (isValid)
+            {
+                await _service.UpdateMail(username, usuario);
+                return Ok("Mail cambiado con exito.");
+            }
+            else
+            {
+                return BadRequest("El proveedor de correo no es valido u esta omitiendo uno de los siguientes elementos: [@] [.com]");
+            }
+
         }
         else
         {
-            return NotFound("Hubo un error al realizar los cambios. Revise el campo email");
+            return NotFound("Hubo un error al realizar los cambios.");
         }
     }
 

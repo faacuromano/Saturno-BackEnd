@@ -99,8 +99,7 @@ public class UsuarioService
 
         if (usuarioExistente is not null)
         {
-            usuarioExistente.Mail = VerificarCorreo(usuario.Mail);
-
+            usuarioExistente.Mail = usuario.Mail;
             await _context.SaveChangesAsync();
         }
     }
@@ -134,7 +133,7 @@ public class UsuarioService
         return response;
     }
 
-    static string VerificarCorreo(string correo)
+    public static bool VerificarCorreo(string correo)
     {
         // Expresión regular para verificar el correo electrónico
         string patron = @"^[a-zA-Z0-9._%+-]+@(gmail|hotmail|outlook|yahoo|aol)\.com$";
@@ -144,11 +143,11 @@ public class UsuarioService
 
         if (esValido is true)
         {
-            return correo;
+            return true;
         }
         else
         {
-            return "El mail ingresado no es valido";
+            return false;
         }
     }
 

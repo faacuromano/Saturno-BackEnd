@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace SATURNO_V2.Data.DTOs;
+namespace SATURNO_V2.Data.DTOs.ClientDto;
 
 public class ClientePerfilDto
 {

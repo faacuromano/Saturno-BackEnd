@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-namespace SATURNO_V2.Data.DTOs;
+namespace SATURNO_V2.Data.DTOs.ClientDto;
 
-public class ProfesionalDtoIn
+public class ClienteDto
 {
     public int IdUsuarios { get; set; }
 
@@ -18,24 +18,16 @@ public class ProfesionalDtoIn
 
     public string NumTelefono { get; set; } = null!;
 
-    public DateTime FechaNacimiento { get; set; }
+    public string FechaNacimiento { get; set; } = null!;
 
     public string? FotoPerfil { get; set; }
 
     public bool? Verificado { get; set; }
 
-    public DateTime CreacionCuenta { get; set; }
+    public string CreacionCuenta { get; set; } = null!;
 
     public string? TipoCuenta { get; set; }
 
-    public string? Descripcion { get; set; }
-
-    public TimeSpan HorarioInicio { get; set; }
-
-    public TimeSpan HorarioFinal { get; set; }
-
-    public string? FotoBanner { get; set; }
-
-    public string? Direccion { get; set; }
+    public string? Ubicacion { get; set; }
 
 }
