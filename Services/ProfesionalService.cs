@@ -34,7 +34,7 @@ public class ProfesionalService
             TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
             Ubicacion = t.IdUsuariosNavigation.Ubicacion,
             Descripcion = t.Descripcion,
-            Profesion = NN.ConvertirNombre(t.Profesion!),
+            Profesion = t.Profesion,
             HorarioInicio = t.HorarioInicio,
             HorarioFinal = t.HorarioFinal,
             Direccion = t.Direccion,
