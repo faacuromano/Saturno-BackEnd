@@ -41,12 +41,12 @@ public class ServicioService
             .FirstOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<Servicio>> GetByProfesional(string username)
+    public async Task<IEnumerable<ServicioDto>> GetByProfesional(string username)
     {
         return await _context.Servicios.Where(a => a.IdProfesionalNavigation != null
-        && a.IdProfesionalNavigation.IdUsuariosNavigation.Username == username).Select(a => new Servicio
+        && a.IdProfesionalNavigation.IdUsuariosNavigation.Username == username).Select(a => new ServicioDto
         {
-            IdProfesional = a.IdProfesional,
+            Id = a.Id,
             Nombre = a.Nombre,
             Precio = a.Precio,
             Duracion = a.Duracion,
