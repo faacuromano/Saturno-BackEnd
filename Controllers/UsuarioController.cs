@@ -29,10 +29,11 @@ public class UsuarioController : ControllerBase
         return await _service.GetAll();
     }
 
-    [HttpGet("/getId/{id}")]
-    public async Task<ActionResult<Usuario>> GetById(int id)
+
+    [HttpGet("{username}")]
+    public async Task<ActionResult<Usuario>> GetByUsername(string username)
     {
-        var usuario = await _service.GetById(id);
+        var usuario = await _service.GetByUsername(username);
 
         if (usuario is not null)
         {
@@ -45,14 +46,14 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpGet("login")]
-    public async Task<ActionResult<UsuarioDtoOut>> Login(string username, string password)
+    public async Task<ActionResult<UsuarioLoginDto>> Login(string username, string password)
     {
         var user = await _service.Login(username, password);
 
         if (user is not null)
         {
             string jwtToken = GenerateToken(user);
-            return Ok(new { token = jwtToken, user });
+            return Ok(new { token = EH.EncryptHash(jwtToken), user });
         }
         else
         {
@@ -121,7 +122,7 @@ public class UsuarioController : ControllerBase
         }
     }
 
-    private string GenerateToken(Usuario usuario)
+    private string GenerateToken(UsuarioLoginDto usuario)
     {
         var claims = new[]
         {

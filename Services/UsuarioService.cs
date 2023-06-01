@@ -126,10 +126,23 @@ public class UsuarioService
         }
     }
 
-    public async Task<Usuario?> Login(string username, string password)
+    public async Task<UsuarioLoginDto?> Login(string username, string password)
     {
         var response = await _context.Usuarios
-                            .FirstOrDefaultAsync(u => u.Username == username && u.Pass == PH.hashPassword(password));
+                            .Where(u => u.Username == username && u.Pass == PH.hashPassword(password))
+                            .Select(t => new UsuarioLoginDto
+                            {
+                                Nombre = t.Nombre,
+                                Apellido = t.Apellido,
+                                Username = t.Username,
+                                Mail = t.Mail,
+                                NumTelefono = t.NumTelefono,
+                                FechaNacimiento = FP.FechaParse(t.FechaNacimiento),
+                                FotoPerfil = t.FotoPerfil,
+                                Ubicacion = t.Ubicacion,
+                                TipoCuenta = t.TipoCuenta
+                            }).FirstOrDefaultAsync();
+
         return response;
     }
 
