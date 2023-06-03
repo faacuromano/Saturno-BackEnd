@@ -85,6 +85,7 @@ public class UsuarioService
             usuarioExistente.Nombre = NN.ConvertirNombre(usuario.Nombre);
             usuarioExistente.Apellido = NN.ConvertirNombre(usuario.Apellido);
             usuarioExistente.Username = usuario.Username;
+            usuarioExistente.Mail = usuario.Mail;
             usuarioExistente.Ubicacion = usuario.Ubicacion;
             usuarioExistente.NumTelefono = usuario.NumTelefono;
             usuarioExistente.FechaNacimiento = usuario.FechaNacimiento;

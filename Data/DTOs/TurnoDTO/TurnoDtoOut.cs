@@ -2,6 +2,9 @@ namespace SATURNO_V2.Data.DTOs.TurnoDTO;
 
 public partial class TurnoDtoOut
 {
+
+    public int Id { get; set; }
+
     public string NombreCliente { get; set; } = null!;
 
     public string NombreProfesional { get; set; } = null!;
