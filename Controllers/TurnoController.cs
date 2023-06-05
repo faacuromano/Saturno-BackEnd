@@ -57,9 +57,10 @@ public class TurnoController : ControllerBase
         }
         else
         {
-            return BadRequest();
+            return BadRequest("No se pudo crear el turno"); // O manejar el escenario de error de alguna otra forma
         }
     }
+
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, Turno turno)

@@ -69,19 +69,28 @@ public class TurnoService
 
     public async Task<Turno?> Create(TurnoDtoIn turnoNuevoDTO)
     {
+        var profesional = await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == turnoNuevoDTO.UsernameProfesional);
+        var cliente = await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == turnoNuevoDTO.UsernameCliente);
+
+        if (profesional is null || cliente is null)
+        {
+            return null; // O manejar el escenario de error de alguna otra forma
+        }
+
         var turnoNuevo = new Turno();
         turnoNuevo.FechaTurno = turnoNuevoDTO.FechaTurno;
         turnoNuevo.HoraTurno = turnoNuevoDTO.HoraTurno;
         turnoNuevo.Observaciones = turnoNuevoDTO.Observaciones;
-        turnoNuevo.IdProfesionales = turnoNuevoDTO.IdProfesionales;
-        turnoNuevo.IdClientes = turnoNuevoDTO.IdClientes;
+        turnoNuevo.IdProfesionales = profesional.Id;
+        turnoNuevo.IdClientes = cliente.Id;
         turnoNuevo.IdServicios = turnoNuevoDTO.IdServicios;
-        _context.Turnos.Add(turnoNuevo);
 
+        _context.Turnos.Add(turnoNuevo);
         await _context.SaveChangesAsync();
 
         return turnoNuevo;
     }
+
 
     public async Task Update(int id, Turno turnoDto)
     {

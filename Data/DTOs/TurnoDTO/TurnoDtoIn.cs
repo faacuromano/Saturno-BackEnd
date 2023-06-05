@@ -4,17 +4,12 @@ using System.Text.Json.Serialization;
 
 namespace SATURNO_V2.Data.DTOs.TurnoDTO;
 
-public partial class TurnoDtoIn
+public class TurnoDtoIn
 {
-    public int IdClientes { get; set; }
-
-    public int IdProfesionales { get; set; }
-
-    public int IdServicios { get; set; }
-
     public DateTime FechaTurno { get; set; }
-
     public TimeSpan? HoraTurno { get; set; }
-
-    public string? Observaciones { get; set; }
+    public string Observaciones { get; set; }
+    public string UsernameProfesional { get; set; }
+    public string UsernameCliente { get; set; }
+    public int IdServicios { get; set; }
 }
