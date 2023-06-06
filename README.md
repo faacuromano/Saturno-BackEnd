@@ -22,11 +22,11 @@ SATURNO es un sistema de turnos diseñado para simplificar el proceso de reserva
 
 SATURNO se desarrolla utilizando las siguientes tecnologías:
 
-- 💻 **Frontend:** HTML, CSS, JavaScript, React.js.
+- 💻 **Frontend:** CSS, React.js, Bootstrap
 
-- 🚀 **Backend:** C#, ASP.NET Core, Entity Framework Core.
+- 🚀 **Backend:** C#, .NET Core
 
-- 🗄️ **Base de datos:** SQL Server, MySQL, PostgreSQL u otros sistemas de gestión de bases de datos relacionales.
+- 🗄️ **Base de datos:** SQL Server
 
 ## Instalación y configuración
 
