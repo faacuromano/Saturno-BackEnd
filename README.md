@@ -32,7 +32,8 @@ SATURNO se desarrolla utilizando las siguientes tecnologías:
 
 1. Clona este repositorio en tu máquina local.
 ```shell
-git clone https://github.com/faacuromano/Saturno-BackEnd/ & cd ./Saturno_Backend/
+git clone https://github.com/faacuromano/Saturno-BackEnd/
+cd ./Saturno_Backend/
 ```
 2. Ejecuta el proyecto backend en tu herramienta de línea de comandos preferida.
 ```shell
