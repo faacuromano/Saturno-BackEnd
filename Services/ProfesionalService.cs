@@ -89,7 +89,8 @@ public class ProfesionalService
         return await _context.Turnos.Select(t => new ListaTurnosDTO
         {
             HoraTurno = t.HoraTurno,
-            FechaTurno = t.FechaTurno
+            FechaTurno = t.FechaTurno,
+            Duracion = t.IdServiciosNavigation.Duracion
         }).ToListAsync();
     }
     public async Task<IEnumerable<Servicio>> GetServiceToDelete(int id)

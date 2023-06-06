@@ -3,6 +3,7 @@ using SATURNO_V2.Services;
 using SATURNO_V2.Data.SaturnoModels;
 using SATURNO_V2.Functions;
 using SATURNO_V2.Data.DTOs.ProfesionalDTO;
+using System.Globalization;
 
 namespace SATURNO_V2.Controllers;
 
@@ -23,12 +24,6 @@ public class ProfesionalController : ControllerBase
         return await _service.GetAll();
     }
 
-    [HttpGet("cuted/{n}")]
-    public async Task<IEnumerable<ProfesionalDto>> GetFour(int n)
-    {
-        return await _service.GetFour(n);
-    }
-
     [HttpGet("horarios/{username}/{fecha}")]
     public async Task<IDictionary<DateTime, IEnumerable<string>>> GetInicioCierre(string username, int id, DateTime fecha)
     {
@@ -37,36 +32,76 @@ public class ProfesionalController : ControllerBase
         var turnos = await _service.GetTurnos();
         TimeSpan? horaInicio = profesional.HorarioInicio;
         TimeSpan? horaFinal = profesional.HorarioFinal;
-        var servicioIntervalo = servicio.Duracion;
+        string servicioIntervalo = servicio?.Duracion.ToString() ?? string.Empty;
 
         IDictionary<DateTime, IEnumerable<string>> horarios = new Dictionary<DateTime, IEnumerable<string>>();
 
-        while (horaInicio <= horaFinal)
+        // Generar una lista completa de horarios disponibles
+        var horariosDisponibles = GenerarHorariosDisponibles(horaInicio.Value, horaFinal.Value, servicioIntervalo);
+
+        // Eliminar los horarios ocupados según los turnos existentes
+        foreach (var turno in turnos)
         {
-            var fechaHoraActual = fecha.Add(horaInicio.Value);
+            var fechaTurno = turno.FechaTurno.Date;
+            var horaTurno = turno.HoraTurno;
 
-            // Verificar si existe algún turno para la fecha actual y la hora actual
-            var turnoExistente = turnos.FirstOrDefault(t =>
-                t.FechaTurno.Date == fechaHoraActual.Date &&
-                t.HoraTurno == fechaHoraActual.TimeOfDay);
-
-            // Agregar el horario solo si no hay un turno existente para la fecha actual
-            if (turnoExistente == null)
+            // Verificar si el turno es para la fecha y el servicio específicos
+            if (fechaTurno == fecha && horaTurno.HasValue)
             {
-                if (!horarios.ContainsKey(fechaHoraActual.Date))
-                {
-                    horarios[fechaHoraActual.Date] = new List<string>();
-                }
+                var duracionTurno = turno.Duracion ?? TimeSpan.Zero;
 
-                ((List<string>)horarios[fechaHoraActual.Date]).Add(fechaHoraActual.ToString("HH\\:mm")); // Utilizar "HH" para formato de 24 horas
+                // Calcular el rango de horarios ocupados por el turno
+                var horaInicioTurno = horaTurno.Value;
+                var horaFinalTurno = horaInicioTurno.Add(duracionTurno);
+
+                // Eliminar los horarios ocupados de la lista de horarios disponibles
+                horariosDisponibles.RemoveAll(h => h >= horaInicioTurno && h < horaFinalTurno);
+            }
+        }
+
+        // Agregar los horarios disponibles restantes a la lista final de horarios
+        foreach (var horarioDisponible in horariosDisponibles)
+        {
+            var fechaHoraActual = fecha.Add(horarioDisponible);
+
+            if (!horarios.ContainsKey(fechaHoraActual.Date))
+            {
+                horarios[fechaHoraActual.Date] = new List<string>();
             }
 
-            horaInicio = horaInicio.Value.Add(TimeSpan.Parse(servicioIntervalo.ToString()));
+            ((List<string>)horarios[fechaHoraActual.Date]).Add(horarioDisponible.ToString(@"hh\:mm")); // Utilizar "HH" para formato de 24 horas
         }
 
         return horarios;
     }
 
+    private List<TimeSpan> GenerarHorariosDisponibles(TimeSpan horaInicio, TimeSpan horaFinal, string servicioIntervalo)
+    {
+        var horarios = new List<TimeSpan>();
+        var intervalo = TimeSpan.ParseExact(servicioIntervalo, @"hh\:mm\:ss", CultureInfo.InvariantCulture);
+
+        while (horaInicio <= horaFinal)
+        {
+            horarios.Add(horaInicio);
+            horaInicio = horaInicio.Add(intervalo);
+        }
+
+        return horarios;
+    }
+
+    private IEnumerable<TimeSpan> ObtenerHorariosDisponibles(TimeSpan horaInicio, TimeSpan horaFinal, string servicioIntervalo)
+    {
+        var horarios = new List<TimeSpan>();
+        var intervalo = TimeSpan.ParseExact(servicioIntervalo, @"hh\:mm\:ss", CultureInfo.InvariantCulture);
+
+        while (horaInicio <= horaFinal)
+        {
+            horarios.Add(horaInicio);
+            horaInicio = horaInicio.Add(intervalo);
+        }
+
+        return horarios;
+    }
 
     [HttpGet("{username}")]
     public async Task<ActionResult<ProfesionalDto>> GetByUsername(string username)

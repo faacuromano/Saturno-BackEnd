@@ -8,5 +8,6 @@ public class ListaTurnosDTO
 {
     public DateTime FechaTurno { get; set; }
     public TimeSpan? HoraTurno { get; set; }
+    public TimeSpan? Duracion { get; set; }
 
 }
