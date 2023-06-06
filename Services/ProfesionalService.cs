@@ -94,6 +94,7 @@ public class ProfesionalService
                 Apellido = t.IdUsuariosNavigation.Apellido,
                 Username = t.IdUsuariosNavigation.Username,
                 Mail = t.IdUsuariosNavigation.Mail,
+                Ubicacion = t.IdUsuariosNavigation.Ubicacion,
                 Pass = t.IdUsuariosNavigation.Pass,
                 NumTelefono = t.IdUsuariosNavigation.NumTelefono,
                 FechaNacimiento = FP.FechaParse(t.IdUsuariosNavigation.FechaNacimiento),
