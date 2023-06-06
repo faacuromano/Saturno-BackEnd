@@ -13,3 +13,12 @@ public class TurnoDtoIn
     public string UsernameCliente { get; set; }
     public int IdServicios { get; set; }
 }
+
+public class GenerarHorariosRequest
+{
+    public int IdProfesional { get; set; }
+    public DateTime Fecha { get; set; }
+    public TimeSpan HoraInicio { get; set; }
+    public TimeSpan HoraFinal { get; set; }
+    public TimeSpan Intervalo { get; set; }
+}

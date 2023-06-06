@@ -3,6 +3,7 @@ using SATURNO_V2.Data;
 using SATURNO_V2.Data.SaturnoModels;
 using SATURNO_V2.Functions;
 using SATURNO_V2.Data.DTOs.ProfesionalDTO;
+using SATURNO_V2.Data.DTOs.TurnoDTO;
 
 namespace SATURNO_V2.Services;
 
@@ -41,7 +42,6 @@ public class ProfesionalService
             FotoBanner = t.FotoBanner,
 
         }).ToListAsync();
-
     }
     public async Task<IEnumerable<ProfesionalDto>> GetFour(int n)
     {
@@ -71,6 +71,7 @@ public class ProfesionalService
 
         return professionalsToCut.Take(n).ToArray();
     }
+
     public async Task<Profesionale?> GetByIdToFunction(int id)
     {
         return await _context.Profesionales.FindAsync(id);
@@ -78,6 +79,18 @@ public class ProfesionalService
     public async Task<Usuario?> GetUsuarioToDelete(int id)
     {
         return await _context.Usuarios.FindAsync(id);
+    }
+    public async Task<Servicio?> GetServicio(int id)
+    {
+        return await _context.Servicios.FindAsync(id);
+    }
+    public async Task<IEnumerable<ListaTurnosDTO?>> GetTurnos()
+    {
+        return await _context.Turnos.Select(t => new ListaTurnosDTO
+        {
+            HoraTurno = t.HoraTurno,
+            FechaTurno = t.FechaTurno
+        }).ToListAsync();
     }
     public async Task<IEnumerable<Servicio>> GetServiceToDelete(int id)
     {

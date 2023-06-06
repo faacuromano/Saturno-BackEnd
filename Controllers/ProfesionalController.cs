@@ -29,6 +29,45 @@ public class ProfesionalController : ControllerBase
         return await _service.GetFour(n);
     }
 
+    [HttpGet("horarios/{username}/{fecha}")]
+    public async Task<IDictionary<DateTime, IEnumerable<string>>> GetInicioCierre(string username, int id, DateTime fecha)
+    {
+        var profesional = await _service.GetByUsername(username);
+        var servicio = await _service.GetServicio(id);
+        var turnos = await _service.GetTurnos();
+        TimeSpan? horaInicio = profesional.HorarioInicio;
+        TimeSpan? horaFinal = profesional.HorarioFinal;
+        var servicioIntervalo = servicio.Duracion;
+
+        IDictionary<DateTime, IEnumerable<string>> horarios = new Dictionary<DateTime, IEnumerable<string>>();
+
+        while (horaInicio <= horaFinal)
+        {
+            var fechaHoraActual = fecha.Add(horaInicio.Value);
+
+            // Verificar si existe algún turno para la fecha actual y la hora actual
+            var turnoExistente = turnos.FirstOrDefault(t =>
+                t.FechaTurno.Date == fechaHoraActual.Date &&
+                t.HoraTurno == fechaHoraActual.TimeOfDay);
+
+            // Agregar el horario solo si no hay un turno existente para la fecha actual
+            if (turnoExistente == null)
+            {
+                if (!horarios.ContainsKey(fechaHoraActual.Date))
+                {
+                    horarios[fechaHoraActual.Date] = new List<string>();
+                }
+
+                ((List<string>)horarios[fechaHoraActual.Date]).Add(fechaHoraActual.ToString("HH\\:mm")); // Utilizar "HH" para formato de 24 horas
+            }
+
+            horaInicio = horaInicio.Value.Add(TimeSpan.Parse(servicioIntervalo.ToString()));
+        }
+
+        return horarios;
+    }
+
+
     [HttpGet("{username}")]
     public async Task<ActionResult<ProfesionalDto>> GetByUsername(string username)
     {
