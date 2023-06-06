@@ -34,10 +34,11 @@ SATURNO se desarrolla utilizando las siguientes tecnologías:
 ```shell
 git clone https://github.com/faacuromano/Saturno-BackEnd/
 ```
-2. Instala las dependencias del frontend ejecutando `npm install` en la carpeta del proyecto frontend.
-3. Configura la cadena de conexión a la base de datos en el archivo de configuración del backend.
-4. Ejecuta el proyecto frontend utilizando `npm start` y el backend utilizando tu IDE o herramienta de línea de comandos preferida.
-5. Accede a SATURNO en tu navegador utilizando la URL proporcionada por tu entorno de desarrollo local.
+2. Ejecuta el proyecto backend en tu herramienta de línea de comandos preferida.
+```shell
+dotnet run
+```
+3. Accede a SATURNO en tu navegador utilizando la URL proporcionada por tu entorno de desarrollo local.
 
 ## Contribución
 
