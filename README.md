@@ -28,7 +28,7 @@ SATURNO se desarrolla utilizando las siguientes tecnologías:
 
 - 🗄️ **Base de datos:** SQL Server
 
-## Instalación y configuración
+## Instalación y configuración para desarrollo local
 
 1. Clona este repositorio en tu máquina local.
 ```shell
