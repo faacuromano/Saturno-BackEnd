@@ -18,6 +18,7 @@ public class ProfesionalService
         _context = context;
     }
 
+    #region GetAll Y GetAll CUTED
     public async Task<IEnumerable<ProfesionalDto>> GetAll()
     {
         return await _context.Profesionales.Select(t => new ProfesionalDto
@@ -72,34 +73,16 @@ public class ProfesionalService
 
         return professionalsToCut.Take(n).ToArray();
     }
+    #endregion
 
+    #region Get by ID
     public async Task<Profesionale?> GetByIdToFunction(int id)
     {
         return await _context.Profesionales.FindAsync(id);
     }
-    public async Task<Usuario?> GetUsuarioToDelete(int id)
-    {
-        return await _context.Usuarios.FindAsync(id);
-    }
-    public async Task<Servicio?> GetServicio(int id)
-    {
-        return await _context.Servicios.FindAsync(id);
-    }
-    public async Task<IEnumerable<ListaTurnosDTO?>> GetTurnos()
-    {
-        return await _context.Turnos.Select(t => new ListaTurnosDTO
-        {
-            HoraTurno = t.HoraTurno,
-            FechaTurno = t.FechaTurno,
-            Duracion = t.IdServiciosNavigation.Duracion
-        }).ToListAsync();
-    }
-    public async Task<IEnumerable<Servicio>> GetServiceToDelete(int id)
-    {
-        return await _context.Servicios.Where(t => t.IdProfesionalNavigation != null &&
-        t.IdProfesionalNavigation.IdUsuariosNavigation.Id == id).ToListAsync();
+    #endregion
 
-    }
+    #region Get by USERNAME
     public async Task<ProfesionalDto?> GetByUsername(string username)
     {
         return await _context.Profesionales
@@ -128,6 +111,75 @@ public class ProfesionalService
             .FirstOrDefaultAsync();
     }
 
+    #endregion
+
+    #region Create
+    public async Task<Profesionale?> Create(Profesionale profesionalNuevo)
+    {
+        profesionalNuevo.IdUsuariosNavigation.Pass = PH.hashPassword(profesionalNuevo.IdUsuariosNavigation.Pass);
+        profesionalNuevo.IdUsuariosNavigation.Nombre = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Nombre);
+        profesionalNuevo.IdUsuariosNavigation.Apellido = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Apellido);
+        profesionalNuevo.IdUsuariosNavigation.TipoCuenta = "P";
+        profesionalNuevo.IdUsuariosNavigation.CreacionCuenta = DateTime.Today;
+        _context.Profesionales.Add(profesionalNuevo);
+
+        await _context.SaveChangesAsync();
+
+        return profesionalNuevo;
+    }
+    #endregion
+
+    #region Update
+    public async Task Update(int id, ProfesionalDtoUpdate profesionalDto)
+    {
+        var profesionalExistente = await GetByIdToFunction(id);
+
+        if (profesionalExistente is not null)
+        {
+            profesionalExistente.Descripcion = profesionalDto.Descripcion;
+            profesionalExistente.HorarioInicio = profesionalDto.HorarioInicio;
+            profesionalExistente.HorarioFinal = profesionalDto.HorarioFinal;
+            profesionalExistente.FotoBanner = profesionalDto.FotoBanner;
+            profesionalExistente.Direccion = profesionalDto.Direccion;
+            profesionalExistente.Profesion = profesionalDto.Profesion;
+            profesionalExistente.IdUsuarios = profesionalDto.IdUsuarios;
+
+            await _context.SaveChangesAsync();
+        }
+    }
+    #endregion
+
+    #region Delete
+    public async Task Delete(int id)
+    {
+        var serviciosDelete = await GetServiceToDelete(id);
+        var profesionalToDelete = await GetByIdToFunction(id);
+        var usuarioDelete = await GetUsuarioToDelete(id);
+
+        if (profesionalToDelete is not null && usuarioDelete is not null)
+        {
+            _context.Servicios.RemoveRange(serviciosDelete);
+            _context.Profesionales.Remove(profesionalToDelete);
+            _context.Usuarios.Remove(usuarioDelete);
+
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task<Usuario?> GetUsuarioToDelete(int id)
+    {
+        return await _context.Usuarios.FindAsync(id);
+    }
+    public async Task<IEnumerable<Servicio>> GetServiceToDelete(int id)
+    {
+        return await _context.Servicios.Where(t => t.IdProfesionalNavigation != null &&
+        t.IdProfesionalNavigation.IdUsuariosNavigation.Id == id).ToListAsync();
+
+    }
+
+    #endregion
+
+    #region Generar Horarios
     public async Task<IDictionary<DateTime, IEnumerable<string>>> GetHorariosDisponibles(string username, int id, DateTime fecha)
     {
         var profesional = await GetByUsername(username);
@@ -177,7 +229,6 @@ public class ProfesionalService
 
         return horarios;
     }
-
     private List<TimeSpan> GenerarHorariosDisponibles(TimeSpan horaInicio, TimeSpan horaFinal, string servicioIntervalo)
     {
         var horarios = new List<TimeSpan>();
@@ -192,51 +243,22 @@ public class ProfesionalService
         return horarios;
     }
 
-    public async Task<Profesionale?> Create(Profesionale profesionalNuevo)
+    public async Task<Servicio?> GetServicio(int id)
     {
-        profesionalNuevo.IdUsuariosNavigation.Pass = PH.hashPassword(profesionalNuevo.IdUsuariosNavigation.Pass);
-        profesionalNuevo.IdUsuariosNavigation.Nombre = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Nombre);
-        profesionalNuevo.IdUsuariosNavigation.Apellido = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Apellido);
-        profesionalNuevo.IdUsuariosNavigation.TipoCuenta = "P";
-        profesionalNuevo.IdUsuariosNavigation.CreacionCuenta = DateTime.Today;
-        _context.Profesionales.Add(profesionalNuevo);
-
-        await _context.SaveChangesAsync();
-
-        return profesionalNuevo;
+        return await _context.Servicios.FindAsync(id);
     }
 
-    public async Task Update(int id, ProfesionalDtoUpdate profesionalDto)
+    public async Task<IEnumerable<ListaTurnosDTO?>> GetTurnos()
     {
-        var profesionalExistente = await GetByIdToFunction(id);
-
-        if (profesionalExistente is not null)
+        return await _context.Turnos.Select(t => new ListaTurnosDTO
         {
-            profesionalExistente.Descripcion = profesionalDto.Descripcion;
-            profesionalExistente.HorarioInicio = profesionalDto.HorarioInicio;
-            profesionalExistente.HorarioFinal = profesionalDto.HorarioFinal;
-            profesionalExistente.FotoBanner = profesionalDto.FotoBanner;
-            profesionalExistente.Direccion = profesionalDto.Direccion;
-            profesionalExistente.Profesion = profesionalDto.Profesion;
-            profesionalExistente.IdUsuarios = profesionalDto.IdUsuarios;
-
-            await _context.SaveChangesAsync();
-        }
-    }
-    public async Task Delete(int id)
-    {
-        var serviciosDelete = await GetServiceToDelete(id);
-        var profesionalToDelete = await GetByIdToFunction(id);
-        var usuarioDelete = await GetUsuarioToDelete(id);
-
-        if (profesionalToDelete is not null && usuarioDelete is not null)
-        {
-            _context.Servicios.RemoveRange(serviciosDelete);
-            _context.Profesionales.Remove(profesionalToDelete);
-            _context.Usuarios.Remove(usuarioDelete);
-
-            await _context.SaveChangesAsync();
-        }
+            HoraTurno = t.HoraTurno,
+            FechaTurno = t.FechaTurno,
+            Duracion = t.IdServiciosNavigation.Duracion
+        }).ToListAsync();
     }
 
+
+    #endregion
 }
+

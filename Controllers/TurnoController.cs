@@ -61,19 +61,6 @@ public class TurnoController : ControllerBase
         }
     }
 
-
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, Turno turno)
-    {
-        if (id != turno.Id)
-        {
-            return BadRequest();
-        }
-
-        await _service.Update(id, turno);
-        return Ok();
-    }
-
     [HttpDelete]
     public async Task<IActionResult> Delete(int id)
     {

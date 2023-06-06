@@ -91,23 +91,6 @@ public class TurnoService
         return turnoNuevo;
     }
 
-
-    public async Task Update(int id, Turno turnoDto)
-    {
-        var profesionalExistente = await GetByIdToFunction(id);
-
-        if (profesionalExistente is not null)
-        {
-            profesionalExistente.IdClientes = turnoDto.IdClientes;
-            profesionalExistente.IdProfesionales = turnoDto.IdProfesionales;
-            profesionalExistente.IdServicios = turnoDto.IdServicios;
-            profesionalExistente.Observaciones = turnoDto.Observaciones;
-            profesionalExistente.HoraTurno = turnoDto.HoraTurno;
-            profesionalExistente.FechaTurno = turnoDto.FechaTurno;
-
-            await _context.SaveChangesAsync();
-        }
-    }
     public async Task Delete(int id)
     {
         var ususarioDelete = await GetByIdToFunction(id);
@@ -118,4 +101,5 @@ public class TurnoService
             await _context.SaveChangesAsync();
         }
     }
+
 }

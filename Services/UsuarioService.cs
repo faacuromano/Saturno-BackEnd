@@ -26,6 +26,7 @@ public class UsuarioService
     {
         return await _context.Usuarios.FindAsync(id);
     }
+
     public async Task<Usuario?> GetByUsername(string username)
     {
         return await _context.Usuarios
@@ -50,7 +51,6 @@ public class UsuarioService
        })
        .FirstOrDefaultAsync();
     }
-
 
     public async Task<Usuario?> Create(UsuarioDtoIn usuarioNuevoDto)
     {
@@ -94,16 +94,21 @@ public class UsuarioService
             await _context.SaveChangesAsync();
         }
     }
+
     public async Task UpdateMail(string username, UsuarioUpdateMailDTO usuario)
     {
         var usuarioExistente = await GetByUsername(username);
 
         if (usuarioExistente is not null)
         {
-            usuarioExistente.Mail = usuario.Mail;
-            await _context.SaveChangesAsync();
+            if (VerificarCorreo(usuario.Mail))
+            {
+                usuarioExistente.Mail = usuario.Mail;
+                await _context.SaveChangesAsync();
+            }
         }
     }
+
     public async Task UpdatePassword(string username, UsuarioUpdatePasswordDTO usuario)
     {
         var usuarioExistente = await GetByUsername(username);
