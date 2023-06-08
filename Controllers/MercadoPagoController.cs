@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using MercadoPago.Config;
 using MercadoPago.Client.Payment;
 using MercadoPago.Resource.Payment;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace SATURNO_V2.Controllers;
 
@@ -20,18 +22,20 @@ namespace SATURNO_V2.Controllers;
 
 public class MercadoPagoController : ControllerBase
 {
+    [Authorize("APP_USR-2303800404167032-053121-7d6958f7ac334a6723eeaf0caf34f864-1387539311")]
 
     [HttpPost("mercadopagoPreference")]
+    //[EnableCors(origins: "http://localhost:5555", headers: "*", methods: "*")]
     public async Task<IActionResult> RunAsync()
     {
         // Update port # in the following line.
         client.BaseAddress = new Uri("https://api.mercadopago.com/");
         client.DefaultRequestHeaders.Accept.Clear();
         client.DefaultRequestHeaders.Accept.Add(
-            new AuthenticationHeaderValue("Authorization", "Bearer APP_USR-2303800404167032-053121-7d6958f7ac334a6723eeaf0caf34f864-1387539311"));
-        //new MediaTypeWithQualityHeaderValue("application/json"));
-        client.DefaultRequestHeaders.Add("Authorization", "Bearer APP_USR-2303800404167032-053121-7d6958f7ac334a6723eeaf0caf34f864-1387539311");
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "Bearer APP_USR-2303800404167032-053121-7d6958f7ac334a6723eeaf0caf34f864-1387539311");
+            //new AuthenticationHeaderValue("Authorization", "Bearer APP_USR-2303800404167032-053121-7d6958f7ac334a6723eeaf0caf34f864-1387539311"));
+        new MediaTypeWithQualityHeaderValue("application/json"));
+        //client.DefaultRequestHeaders.Add("Authorization", "Bearer APP_USR-2303800404167032-053121-7d6958f7ac334a6723eeaf0caf34f864-1387539311");
+        //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "Bearer APP_USR-2303800404167032-053121-7d6958f7ac334a6723eeaf0caf34f864-1387539311");
         //Authorization =
         //    new AuthenticationHeaderValue("Authorization", "Bearer APP_USR-2303800404167032-053121-7d6958f7ac334a6723eeaf0caf34f864-1387539311");
 

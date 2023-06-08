@@ -41,6 +41,21 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("Profesional", policy => policy.RequireClaim("TipoCuenta", "P"));
 });
 
+
+// Enable CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:5555") // or AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowAnyOrigin();
+    });
+});
+
+// enable policy
+
 var app = builder.Build();
 
 app.UseCors(builder =>
@@ -50,6 +65,9 @@ app.UseCors(builder =>
     .AllowAnyMethod()
     .AllowCredentials()
 );
+
+// Enable Cors
+//config.EnableCors();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
