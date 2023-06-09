@@ -4,6 +4,7 @@ using SATURNO_V2.Data.SaturnoModels;
 using SATURNO_V2.Functions;
 using SATURNO_V2.Data.DTOs.ProfesionalDTO;
 using System.Globalization;
+using System;
 
 namespace SATURNO_V2.Controllers;
 
@@ -82,6 +83,23 @@ public class ProfesionalController : ControllerBase
         await _service.Update(id, profesionalDtoIn);
         return Ok();
     }
+
+    [HttpPut("cambiarEstado/{username}")]
+    public async Task<IActionResult> UpdateStatus(string username)
+    {
+        var usuarioUpdate = await _service.GetByUsername(username);
+
+        if (usuarioUpdate is not null)
+        {
+            await _service.UpdateStatus(username);
+            return Ok("Cuenta activada exitosamente!");
+        }
+        else
+        {
+            return NotFound("Hubo un error al activar la cambios");
+        }
+    }
+
 
     [HttpDelete]
     public async Task<IActionResult> Delete(int id)

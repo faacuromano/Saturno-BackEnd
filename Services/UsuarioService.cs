@@ -121,6 +121,18 @@ public class UsuarioService
         }
     }
 
+    public async Task UpdateVerificado(string username)
+    {
+        var usuarioExistente = await GetByUsername(username);
+
+        if (usuarioExistente is not null)
+        {
+            usuarioExistente.Verificado = true;
+
+            await _context.SaveChangesAsync();
+        }
+    }
+
     public async Task Delete(int id)
     {
         var usuarioDelete = await GetById(id);

@@ -37,6 +37,7 @@ public class ProfesionalService
             TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
             Ubicacion = t.IdUsuariosNavigation.Ubicacion,
             Descripcion = t.Descripcion,
+            EstadoSub = t.EstadoSub,
             Profesion = t.Profesion,
             HorarioInicio = t.HorarioInicio,
             HorarioFinal = t.HorarioFinal,
@@ -103,6 +104,7 @@ public class ProfesionalService
                 CreacionCuenta = FP.FechaParse(t.IdUsuariosNavigation.CreacionCuenta),
                 TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
                 Descripcion = t.Descripcion,
+                EstadoSub = t.EstadoSub,
                 Profesion = t.Profesion,
                 HorarioInicio = t.HorarioInicio,
                 HorarioFinal = t.HorarioFinal,
@@ -120,6 +122,7 @@ public class ProfesionalService
         profesionalNuevo.IdUsuariosNavigation.Pass = PH.hashPassword(profesionalNuevo.IdUsuariosNavigation.Pass);
         profesionalNuevo.IdUsuariosNavigation.Nombre = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Nombre);
         profesionalNuevo.IdUsuariosNavigation.Apellido = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Apellido);
+        profesionalNuevo.EstadoSub = false;
         profesionalNuevo.IdUsuariosNavigation.TipoCuenta = "P";
         profesionalNuevo.IdUsuariosNavigation.CreacionCuenta = DateTime.Today;
         _context.Profesionales.Add(profesionalNuevo);
@@ -135,6 +138,7 @@ public class ProfesionalService
     {
         var profesionalExistente = await GetByIdToFunction(id);
 
+
         if (profesionalExistente is not null)
         {
             profesionalExistente.Descripcion = profesionalDto.Descripcion;
@@ -148,6 +152,22 @@ public class ProfesionalService
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task UpdateStatus(string username)
+    {
+        var profesionalToGet = await GetByUsername(username);
+        var id = profesionalToGet.IdUsuarios;
+        var usuarioExistente = await GetByIdToFunction(id);
+
+
+        if (usuarioExistente is not null)
+        {
+            usuarioExistente.EstadoSub = true;
+
+            await _context.SaveChangesAsync();
+        }
+    }
+
     #endregion
 
     #region Delete

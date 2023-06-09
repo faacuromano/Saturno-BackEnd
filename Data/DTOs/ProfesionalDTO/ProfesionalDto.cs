@@ -31,6 +31,8 @@ public class ProfesionalDto
 
     public string? TipoCuenta { get; set; }
 
+    public bool EstadoSub { get; set; }
+
     public string? Descripcion { get; set; }
 
     public string? Profesion { get; set; }

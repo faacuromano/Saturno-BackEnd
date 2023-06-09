@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using SATURNO_V2.Data.SaturnoModels;
 
 namespace SATURNO_V2.Data.DTOs.ProfesionalDTO;
 
@@ -17,4 +18,5 @@ public class ProfesionalDtoUpdate
 
     public string? Profesion { get; set; }
 
+    public virtual Usuario IdUsuariosNavigation { get; set; } = null!;
 }

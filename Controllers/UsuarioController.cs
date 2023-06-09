@@ -102,6 +102,21 @@ public class UsuarioController : ControllerBase
             return NotFound("Hubo un error al realizar los cambios.");
         }
     }
+    [HttpPut("updateVerficado/{username}")]
+    public async Task<IActionResult> UpdateVerficado(string username)
+    {
+        var usuarioUpdate = await _service.GetByUsername(username);
+
+        if (usuarioUpdate is not null)
+        {
+            await _service.UpdateVerificado(username);
+            return Ok("Verficacion correcta");
+        }
+        else
+        {
+            return BadRequest("La verificacion no ha podido completarse");
+        }
+    }
 
     [HttpPut("updatePassword/{username}")]
     public async Task<IActionResult> UpdatePassword(string username, UsuarioUpdatePasswordDTO usuario)
@@ -141,6 +156,27 @@ public class UsuarioController : ControllerBase
 
         string token = new JwtSecurityTokenHandler().WriteToken(securityToken);
 
-        return token;
+        return EncryptToken(token);
+    }
+
+    public static string EncryptToken(string token)
+    {
+        // Invertir el string
+        char[] charArray = token.ToCharArray();
+        Array.Reverse(charArray);
+        string invertedToken = new string(charArray);
+
+        // Agregar 10 caracteres extra en puntos específicos
+        string encryptedToken = "";
+        for (int i = 0; i < invertedToken.Length; i++)
+        {
+            encryptedToken += invertedToken[i];
+            if (i % 5 == 0) // Agregar un punto cada 3 caracteres
+            {
+                encryptedToken += "º"; // 
+            }
+        }
+
+        return encryptedToken;
     }
 }
