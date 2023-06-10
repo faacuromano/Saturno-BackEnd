@@ -31,7 +31,7 @@ public class UsuarioController : ControllerBase
 
 
     [HttpGet("{username}")]
-    public async Task<ActionResult<Usuario>> GetByUsername(string username)
+    public async Task<ActionResult<UsuarioDtoOut>> GetByUsername(string username)
     {
         var usuario = await _service.GetByUsername(username);
 
@@ -65,7 +65,7 @@ public class UsuarioController : ControllerBase
     public async Task<IActionResult> Update(string username, UsuarioDtoOut usuario)
     {
 
-        var usuarioUpdate = await _service.GetByUsername(username);
+        var usuarioUpdate = await _service.GetByUsernameToFunction(username);
 
         if (usuarioUpdate is not null)
         {
@@ -81,7 +81,7 @@ public class UsuarioController : ControllerBase
     [HttpPut("updateMail/{username}")]
     public async Task<IActionResult> UpdateMail(string username, UsuarioUpdateMailDTO usuario)
     {
-        var usuarioUpdate = await _service.GetByUsername(username);
+        var usuarioUpdate = await _service.GetByUsernameToFunction(username);
         var isValid = UsuarioService.VerificarCorreo(usuario.Mail);
 
         if (usuarioUpdate is not null)
@@ -105,7 +105,7 @@ public class UsuarioController : ControllerBase
     [HttpPut("updateVerficado/{username}")]
     public async Task<IActionResult> UpdateVerficado(string username)
     {
-        var usuarioUpdate = await _service.GetByUsername(username);
+        var usuarioUpdate = await _service.GetByUsernameToFunction(username);
 
         if (usuarioUpdate is not null)
         {
@@ -121,7 +121,7 @@ public class UsuarioController : ControllerBase
     [HttpPut("updatePassword/{username}")]
     public async Task<IActionResult> UpdatePassword(string username, UsuarioUpdatePasswordDTO usuario)
     {
-        var usuarioUpdate = await _service.GetByUsername(username);
+        var usuarioUpdate = await _service.GetByUsernameToFunction(username);
         var oldPassword = PH.hashPassword(usuario.OldPass);
 
         if (usuarioUpdate is not null

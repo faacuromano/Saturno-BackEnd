@@ -27,10 +27,28 @@ public class UsuarioService
         return await _context.Usuarios.FindAsync(id);
     }
 
-    public async Task<Usuario?> GetByUsername(string username)
+    public async Task<Usuario?> GetByUsernameToFunction(string username)
     {
         return await _context.Usuarios
         .Where(p => p.Username == username)
+        .FirstOrDefaultAsync();
+    }
+
+    public async Task<UsuarioDtoOut?> GetByUsername(string username)
+    {
+        return await _context.Usuarios
+        .Where(p => p.Username == username)
+        .Select(t => new UsuarioDtoOut
+        {
+            Nombre = t.Nombre,
+            Apellido = t.Apellido,
+            Mail = t.Mail,
+            Username = t.Username,
+            NumTelefono = t.NumTelefono,
+            FechaNacimiento = t.FechaNacimiento,
+            Ubicacion = t.Ubicacion,
+            FotoPerfil = t.FotoPerfil,
+        })
         .FirstOrDefaultAsync();
     }
 
@@ -78,7 +96,7 @@ public class UsuarioService
 
     public async Task Update(string username, UsuarioDtoOut usuario)
     {
-        var usuarioExistente = await GetByUsername(username);
+        var usuarioExistente = await GetByUsernameToFunction(username);
 
         if (usuarioExistente is not null)
         {
@@ -97,7 +115,7 @@ public class UsuarioService
 
     public async Task UpdateMail(string username, UsuarioUpdateMailDTO usuario)
     {
-        var usuarioExistente = await GetByUsername(username);
+        var usuarioExistente = await GetByUsernameToFunction(username);
 
         if (usuarioExistente is not null)
         {
@@ -111,7 +129,7 @@ public class UsuarioService
 
     public async Task UpdatePassword(string username, UsuarioUpdatePasswordDTO usuario)
     {
-        var usuarioExistente = await GetByUsername(username);
+        var usuarioExistente = await GetByUsernameToFunction(username);
 
         if (usuarioExistente is not null)
         {
@@ -123,7 +141,7 @@ public class UsuarioService
 
     public async Task UpdateVerificado(string username)
     {
-        var usuarioExistente = await GetByUsername(username);
+        var usuarioExistente = await GetByUsernameToFunction(username);
 
         if (usuarioExistente is not null)
         {
