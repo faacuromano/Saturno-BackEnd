@@ -119,17 +119,25 @@ public class ProfesionalService
     #region Create
     public async Task<Profesionale?> Create(Profesionale profesionalNuevo)
     {
-        profesionalNuevo.IdUsuariosNavigation.Pass = PH.hashPassword(profesionalNuevo.IdUsuariosNavigation.Pass);
-        profesionalNuevo.IdUsuariosNavigation.Nombre = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Nombre);
-        profesionalNuevo.IdUsuariosNavigation.Apellido = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Apellido);
-        profesionalNuevo.EstadoSub = false;
-        profesionalNuevo.IdUsuariosNavigation.TipoCuenta = "P";
-        profesionalNuevo.IdUsuariosNavigation.CreacionCuenta = DateTime.Today;
-        _context.Profesionales.Add(profesionalNuevo);
+        var validPassword = PH.verifyPassword(profesionalNuevo.IdUsuariosNavigation.Pass);
+        if (validPassword is false)
+        {
+            throw new Exception("La contaseña debe contener un numero y una mayuscula");
+        }
+        else
+        {
+            profesionalNuevo.IdUsuariosNavigation.Pass = PH.hashPassword(profesionalNuevo.IdUsuariosNavigation.Pass);
+            profesionalNuevo.IdUsuariosNavigation.Nombre = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Nombre);
+            profesionalNuevo.IdUsuariosNavigation.Apellido = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Apellido);
+            profesionalNuevo.EstadoSub = false;
+            profesionalNuevo.IdUsuariosNavigation.TipoCuenta = "P";
+            profesionalNuevo.IdUsuariosNavigation.CreacionCuenta = DateTime.Today;
+            _context.Profesionales.Add(profesionalNuevo);
 
-        await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-        return profesionalNuevo;
+            return profesionalNuevo;
+        }
     }
     #endregion
 
