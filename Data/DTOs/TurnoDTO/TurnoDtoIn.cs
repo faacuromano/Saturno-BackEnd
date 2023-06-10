@@ -8,9 +8,9 @@ public class TurnoDtoIn
 {
     public DateTime FechaTurno { get; set; }
     public TimeSpan? HoraTurno { get; set; }
-    public string Observaciones { get; set; }
-    public string UsernameProfesional { get; set; }
-    public string UsernameCliente { get; set; }
+    public string Observaciones { get; set; } = null!;
+    public string UsernameProfesional { get; set; } = null!;
+    public string UsernameCliente { get; set; } = null!;
     public int IdServicios { get; set; }
 }
 
