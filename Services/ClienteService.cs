@@ -82,16 +82,24 @@ public class ClienteService
 
     public async Task<Cliente?> Create(Cliente clienteNuevo)
     {
-        clienteNuevo.IdUsuariosNavigation.Pass = PH.hashPassword(clienteNuevo.IdUsuariosNavigation.Pass);
-        clienteNuevo.IdUsuariosNavigation.Nombre = NN.ConvertirNombre(clienteNuevo.IdUsuariosNavigation.Nombre);
-        clienteNuevo.IdUsuariosNavigation.Apellido = NN.ConvertirNombre(clienteNuevo.IdUsuariosNavigation.Apellido);
-        clienteNuevo.IdUsuariosNavigation.TipoCuenta = "C";
-        clienteNuevo.IdUsuariosNavigation.CreacionCuenta = DateTime.Now;
-        _context.Clientes.Add(clienteNuevo);
+        var validPassword = PH.verifyPassword(clienteNuevo.IdUsuariosNavigation.Pass);
+        if (validPassword is false)
+        {
+            throw new Exception("La contaseña debe contener un numero y una mayuscula");
+        }
+        else
+        {
+            clienteNuevo.IdUsuariosNavigation.Pass = PH.hashPassword(clienteNuevo.IdUsuariosNavigation.Pass);
+            clienteNuevo.IdUsuariosNavigation.Nombre = NN.ConvertirNombre(clienteNuevo.IdUsuariosNavigation.Nombre);
+            clienteNuevo.IdUsuariosNavigation.Apellido = NN.ConvertirNombre(clienteNuevo.IdUsuariosNavigation.Apellido);
+            clienteNuevo.IdUsuariosNavigation.TipoCuenta = "C";
+            clienteNuevo.IdUsuariosNavigation.CreacionCuenta = DateTime.Now;
+            _context.Clientes.Add(clienteNuevo);
 
-        await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-        return clienteNuevo;
+            return clienteNuevo;
+        }
     }
 
     public async Task Delete(int id)
