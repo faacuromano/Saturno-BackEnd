@@ -106,6 +106,7 @@ public class UsuarioService
             usuarioExistente.Mail = usuario.Mail;
             usuarioExistente.Ubicacion = usuario.Ubicacion;
             usuarioExistente.NumTelefono = usuario.NumTelefono;
+            usuarioExistente.FotoPerfil = usuario.FotoPerfil;
             usuarioExistente.FechaNacimiento = usuario.FechaNacimiento;
 
 

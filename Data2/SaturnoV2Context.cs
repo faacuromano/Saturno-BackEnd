@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using SATURNO_V2.Data.SaturnoModels;
+using SATURNO_V2.Data2.SaturnoModels2;
 
-namespace SATURNO_V2.Data;
+namespace SATURNO_V2.Data2;
 
 public partial class SaturnoV2Context : DbContext
 {
@@ -27,6 +27,10 @@ public partial class SaturnoV2Context : DbContext
     public virtual DbSet<Turno> Turnos { get; set; }
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=localhost;Database=Saturno_V2;Trusted_connection=true;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
