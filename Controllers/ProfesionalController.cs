@@ -84,7 +84,7 @@ public class ProfesionalController : ControllerBase
         return Ok();
     }
 
-    [HttpPut("cambiarEstado/{username}")]
+    [HttpPut("/activarSubscripcion/{username}")]
     public async Task<IActionResult> UpdateStatus(string username)
     {
         var usuarioUpdate = await _service.GetByUsername(username);

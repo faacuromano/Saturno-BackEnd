@@ -17,8 +17,6 @@ public class ProfesionalDto
 
     public string? Ubicacion { get; set; }
 
-    public string Pass { get; set; } = null!;
-
     public string NumTelefono { get; set; } = null!;
 
     public string FechaNacimiento { get; set; }
