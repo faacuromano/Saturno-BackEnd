@@ -79,6 +79,12 @@ public class ProfesionalService
     {
         return await _context.Profesionales.FindAsync(id);
     }
+    public async Task<Profesionale?> GetByUsernameToFunction(string username)
+    {
+        return await _context.Profesionales
+        .Where(p => p.IdUsuariosNavigation.Username == username)
+        .FirstOrDefaultAsync();
+    }
     #endregion
 
     #region Get by USERNAME
@@ -139,9 +145,9 @@ public class ProfesionalService
     #endregion
 
     #region Update
-    public async Task Update(int id, ProfesionalDtoUpdate profesionalDto)
+    public async Task Update(string username, ProfesionalDtoUpdate profesionalDto)
     {
-        var profesionalExistente = await GetByIdToFunction(id);
+        var profesionalExistente = await GetByUsernameToFunction(username);
 
 
         if (profesionalExistente is not null)
@@ -152,7 +158,6 @@ public class ProfesionalService
             profesionalExistente.FotoBanner = profesionalDto.FotoBanner;
             profesionalExistente.Direccion = profesionalDto.Direccion;
             profesionalExistente.Profesion = profesionalDto.Profesion;
-            profesionalExistente.IdUsuarios = profesionalDto.IdUsuarios;
 
             await _context.SaveChangesAsync();
         }

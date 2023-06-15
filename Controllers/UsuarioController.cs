@@ -35,19 +35,23 @@ namespace SATURNO_V2.Controllers
         public async Task<ActionResult<UsuarioDtoOut>> GetByUsername(string username)
         {
             var currentUser = HttpContext.User.Identity.Name;
-            if (currentUser != username)
-            {
-                return Unauthorized("No podes ver la informacion de este usuario. No te hagas el vivo");
-            }
             var usuario = await _service.GetByUsername(username);
 
-            if (usuario is not null)
+
+            if (usuario is null)
             {
-                return usuario;
+                return NotFound();
             }
             else
             {
-                return NotFound();
+                if (currentUser == username)
+                {
+                    return usuario;
+                }
+                else
+                {
+                    return Unauthorized("No puedes ver la informacion de este usuario.");
+                }
             }
         }
 
@@ -56,14 +60,14 @@ namespace SATURNO_V2.Controllers
         {
             var user = await _service.Login(username, password);
 
-            if (user is not null)
+            if (user is null)
             {
-                string jwtToken = GenerateToken(user);
-                return Ok(new { token = EH.EncryptToken(jwtToken), user });
+                return NotFound("Credenciales Incorrectas");
             }
             else
             {
-                return NotFound("Credenciales Incorrectas");
+                string jwtToken = GenerateToken(user);
+                return Ok(new { token = EH.EncryptToken(jwtToken), user });
             }
         }
 
@@ -71,41 +75,44 @@ namespace SATURNO_V2.Controllers
         [Authorize]
         public async Task<IActionResult> Update(string username, UsuarioDtoOut usuario)
         {
-            // Verificar que el usuario actual coincide con el usuario del token
             var currentUser = HttpContext.User.Identity.Name;
-            if (currentUser != username)
-            {
-                return Unauthorized("No podes realizar cambios sobre este usuario. No te hagas el vivo");
-            }
-
             var usuarioUpdate = await _service.GetByUsernameToFunction(username);
 
-            if (usuarioUpdate is not null)
+            if (usuarioUpdate is null)
+            {
+                return NotFound("El usuario no existe");
+            }
+
+            if (currentUser == username)
             {
                 await _service.Update(username, usuario);
                 return Ok("Los cambios se han aplicado");
             }
             else
             {
-                return NotFound("Hubo un error al realizar los cambios");
+                return Unauthorized("No puedes realizar cambios sobre este usuario.");
             }
+
         }
 
         [HttpPut("updateMail/{username}")]
         [Authorize]
         public async Task<IActionResult> UpdateMail(string username, UsuarioUpdateMailDTO usuario)
         {
-            // Verificar que el usuario actual coincide con el usuario del token
             var currentUser = HttpContext.User.Identity.Name;
-            if (currentUser != username)
-            {
-                return Unauthorized("No podes realizar cambios sobre este usuario. No te hagas el vivo");
-            }
-
             var usuarioUpdate = await _service.GetByUsernameToFunction(username);
             var isValid = UsuarioService.VerificarCorreo(usuario.Mail);
 
-            if (usuarioUpdate is not null)
+            if (usuarioUpdate is null)
+            {
+                return NotFound("El usuario no existe.");
+            }
+
+            if (currentUser != username)
+            {
+                return Unauthorized("No puedes realizar cambios sobre este usuario.");
+            }
+            else
             {
                 if (isValid)
                 {
@@ -116,10 +123,7 @@ namespace SATURNO_V2.Controllers
                 {
                     return BadRequest("El proveedor de correo no es valido u esta omitiendo uno de los siguientes elementos: [@] [.com]");
                 }
-            }
-            else
-            {
-                return NotFound("Hubo un error al realizar los cambios.");
+
             }
         }
 
@@ -127,50 +131,51 @@ namespace SATURNO_V2.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateVerficado(string username)
         {
-            // Verificar que el usuario actual coincide con el usuario del token
             var currentUser = HttpContext.User.Identity.Name;
-            if (currentUser != username)
-            {
-                return Unauthorized("No podes realizar cambios sobre este usuario. No te hagas el vivo");
-            }
-
             var usuarioUpdate = await _service.GetByUsernameToFunction(username);
 
-            if (usuarioUpdate is not null)
+            if (usuarioUpdate is null)
+            {
+                return BadRequest("La verificacion no ha podido completarse");
+            }
+
+            if (currentUser == username)
             {
                 await _service.UpdateVerificado(username);
                 return Ok("Verficacion correcta");
             }
             else
             {
-                return BadRequest("La verificacion no ha podido completarse");
+                return Unauthorized("No puedes realizar cambios sobre este usuario");
             }
+
         }
 
         [HttpPut("updatePassword/{username}")]
         [Authorize]
         public async Task<IActionResult> UpdatePassword(string username, UsuarioUpdatePasswordDTO usuario)
         {
-            // Verificar que el usuario actual coincide con el usuario del token
             var currentUser = HttpContext.User.Identity.Name;
-            if (currentUser != username)
-            {
-                return Unauthorized("No podes realizar cambios sobre este usuario. No te hagas el vivo");
-            }
-
             var usuarioUpdate = await _service.GetByUsernameToFunction(username);
             var oldPassword = PH.hashPassword(usuario.OldPass);
 
-            if (usuarioUpdate is not null
-                && usuarioUpdate.Pass == oldPassword
-                && usuario.NewPass == usuario.SameNew)
+            if (usuarioUpdate is null)
+            {
+                return NotFound("El usuario no existe");
+            }
+
+            if (currentUser != username)
+            {
+                return Unauthorized("No puedes realizar cambios sobre este usuario.");
+            }
+            else if (usuarioUpdate.Pass == oldPassword && usuario.NewPass == usuario.SameNew)
             {
                 await _service.UpdatePassword(username, usuario);
                 return Ok("Contraseña cambiada con exito.");
             }
             else
             {
-                return NotFound("Hubo un error al realizar los cambios. Revise el campo email");
+                return BadRequest("La contraseña anterior no es correcta o las nuevas no coinciden");
             }
         }
 

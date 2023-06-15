@@ -5,7 +5,9 @@ namespace SATURNO_V2.Data.DTOs.ProfesionalDTO;
 
 public class ProfesionalDtoUpdate
 {
+    [JsonIgnore]
     public int IdUsuarios { get; set; }
+
     public string? Descripcion { get; set; }
 
     public TimeSpan HorarioInicio { get; set; }
@@ -18,5 +20,6 @@ public class ProfesionalDtoUpdate
 
     public string? Profesion { get; set; }
 
-    public virtual Usuario IdUsuariosNavigation { get; set; } = null!;
+    [JsonIgnore]
+    public virtual Usuario? IdUsuariosNavigation { get; set; } = null!;
 }
