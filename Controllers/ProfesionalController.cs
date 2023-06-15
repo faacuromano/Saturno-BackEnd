@@ -93,7 +93,7 @@ public class ProfesionalController : ControllerBase
         }
         else
         {
-            return Unauthorized("No podes realizar cambios sobre este usuario. No te hagas el vivo");
+            return Unauthorized("No podes realizar cambios sobre este usuario.");
         }
 
     }
