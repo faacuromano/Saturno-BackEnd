@@ -26,4 +26,5 @@ namespace SATURNO_V2.Functions
             return encryptedToken;
         }
     }
+
 }

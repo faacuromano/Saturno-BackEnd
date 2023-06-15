@@ -31,8 +31,14 @@ namespace SATURNO_V2.Controllers
         }
 
         [HttpGet("{username}")]
+        [Authorize]
         public async Task<ActionResult<UsuarioDtoOut>> GetByUsername(string username)
         {
+            var currentUser = HttpContext.User.Identity.Name;
+            if (currentUser != username)
+            {
+                return Unauthorized("No podes ver la informacion de este usuario. No te hagas el vivo");
+            }
             var usuario = await _service.GetByUsername(username);
 
             if (usuario is not null)
