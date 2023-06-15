@@ -1,9 +1,9 @@
-
 using SATURNO_V2.Data;
 using SATURNO_V2.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +23,31 @@ builder.Services.AddScoped<ClienteService>();
 builder.Services.AddScoped<TurnoService>();
 builder.Services.AddScoped<ServicioService>();
 builder.Services.AddScoped<ListaServices>();
+
+builder.Services.AddSwaggerGen(setupAction =>
+         {
+             setupAction.AddSecurityDefinition("Saturno_V2", new OpenApiSecurityScheme() //Esto va a permitir usar swagger con el token.
+             {
+                 Type = SecuritySchemeType.Http,
+                 Scheme = "Bearer",
+                 Description = "Acá pegar el token generado al loguearse."
+             });
+
+             setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement
+             {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Saturno_V2"
+                            } //Tiene que coincidir con el id seteado arriba en la definición
+
+                        },  new List<string>()
+                    }
+             });
+         });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

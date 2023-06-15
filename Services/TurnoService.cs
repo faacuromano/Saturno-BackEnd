@@ -67,6 +67,29 @@ public class TurnoService
             .ToListAsync();
     }
 
+    public async Task<IEnumerable<TurnoDtoOut?>> GetByProfesionalTerminado(string username)
+    {
+        return await _context.Turnos
+        .Where(p => p.IdProfesionalesNavigation.IdUsuariosNavigation.Username == username && p.FechaTurno >= DateTime.Now)
+        .Select(t => new TurnoDtoOut
+        {
+            NombreCliente = t.IdClientesNavigation.IdUsuariosNavigation.Nombre
+                            + " "
+                            + t.IdClientesNavigation.IdUsuariosNavigation.Apellido,
+
+            NombreProfesional = t.IdProfesionalesNavigation.IdUsuariosNavigation.Nombre
+                                + " "
+                                + t.IdProfesionalesNavigation.IdUsuariosNavigation.Apellido,
+
+            NombreServicio = t.IdServiciosNavigation.Nombre,
+            Monto = t.IdServiciosNavigation.Precio,
+            Observaciones = t.Observaciones,
+            HoraTurno = t.HoraTurno,
+            FechaTurno = FP.FechaParse(t.FechaTurno)
+        })
+        .ToListAsync();
+    }
+
     public async Task<Turno?> Create(TurnoDtoIn turnoNuevoDTO)
     {
         var profesional = await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == turnoNuevoDTO.UsernameProfesional);
