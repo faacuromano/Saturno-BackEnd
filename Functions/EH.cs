@@ -19,7 +19,7 @@ namespace SATURNO_V2.Functions
                 encryptedToken += invertedToken[i];
                 if (i % 5 == 0) // Agregar un punto cada 3 caracteres
                 {
-                    encryptedToken += "º";
+                    encryptedToken += "*";
                 }
             }
 
