@@ -67,7 +67,7 @@ namespace SATURNO_V2.Controllers
             else
             {
                 string jwtToken = GenerateToken(user);
-                return Ok(new { token = (jwtToken), user });
+                return Ok(new { token = EH.EncryptToken(jwtToken), user });
             }
         }
 
