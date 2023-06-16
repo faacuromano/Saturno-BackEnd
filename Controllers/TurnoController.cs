@@ -24,31 +24,9 @@ public class TurnoController : ControllerBase
     }
 
     [HttpGet("/turnosDe/{username}")]
-    public async Task<ActionResult<IEnumerable<TurnoDtoOut?>>> GetByProfesional(string username)
+    public async Task<ActionResult<IEnumerable<TurnoDtoOut?>>> GetByProfesional(string username, int estado)
     {
-        var turno = await _service.GetByProfesional(username);
-
-        if (turno is not null)
-        {
-            if (turno.Count() > 0)
-            {
-                return Ok(turno);
-            }
-            else
-            {
-                return BadRequest(new { error = "No se encontraron turnos para el usuario especificado." });
-            }
-        }
-        else
-        {
-            return BadRequest(new { error = "Turno es null." });
-
-        }
-    }
-    [HttpGet("/turnosDe/{username}/success")]
-    public async Task<ActionResult<IEnumerable<TurnoDtoOut?>>> GetByProfesionalTerminado(string username)
-    {
-        var turno = await _service.GetByProfesionalTerminado(username);
+        var turno = await _service.GetByProfesional(username, estado);
 
         if (turno is not null)
         {
