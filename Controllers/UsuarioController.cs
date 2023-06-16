@@ -73,7 +73,7 @@ namespace SATURNO_V2.Controllers
 
         [HttpPut("{username}")]
         [Authorize]
-        public async Task<IActionResult> Update(string username, UsuarioDtoOut usuario)
+        public async Task<IActionResult> Update(string username, UsuarioDtoIn usuario)
         {
             var currentUser = HttpContext.User.Identity.Name;
             var usuarioUpdate = await _service.GetByUsernameToFunction(username);
@@ -123,7 +123,6 @@ namespace SATURNO_V2.Controllers
                 {
                     return BadRequest("El proveedor de correo no es valido u esta omitiendo uno de los siguientes elementos: [@] [.com]");
                 }
-
             }
         }
 
