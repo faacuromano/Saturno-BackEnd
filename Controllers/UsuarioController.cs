@@ -67,7 +67,7 @@ namespace SATURNO_V2.Controllers
             else
             {
                 string jwtToken = GenerateToken(user);
-                return Ok(new { token = EH.EncryptToken(jwtToken), user });
+                return Ok(new { token = (jwtToken), user });
             }
         }
 
@@ -157,10 +157,15 @@ namespace SATURNO_V2.Controllers
             var currentUser = HttpContext.User.Identity.Name;
             var usuarioUpdate = await _service.GetByUsernameToFunction(username);
             var oldPassword = PH.hashPassword(usuario.OldPass);
+            var isValidPassword = PH.verifyPassword(usuario.NewPass);
 
             if (usuarioUpdate is null)
             {
                 return NotFound("El usuario no existe");
+            }
+            if (isValidPassword is false)
+            {
+                return BadRequest("La contraseña debe contener 6 caracteres, un numero, y una mayuscula");
             }
 
             if (currentUser != username)
@@ -174,7 +179,7 @@ namespace SATURNO_V2.Controllers
             }
             else
             {
-                return BadRequest("La contraseña anterior no es correcta o las nuevas no coinciden");
+                return BadRequest("La contraseña vieja no es correcta o las nuevas no coinciden");
             }
         }
 
@@ -192,7 +197,7 @@ namespace SATURNO_V2.Controllers
 
             var securityToken = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(4),
+                expires: DateTime.Now.AddHours(2),
                 signingCredentials: creds);
 
             string token = new JwtSecurityTokenHandler().WriteToken(securityToken);

@@ -17,6 +17,9 @@ namespace SATURNO_V2.Functions
         }
         public static bool verifyPassword(string input)
         {
+            // Verificar si tiene al menos 6 caracteres
+            bool hasLength = input.Length > 6;
+
             // Verificar si contiene al menos una letra mayúscula
             bool hasUppercase = input.Any(char.IsUpper);
 
@@ -24,7 +27,7 @@ namespace SATURNO_V2.Functions
             bool hasNumber = Regex.IsMatch(input, @"\d");
 
             // Retornar true si cumple ambas condiciones, de lo contrario, retornar false
-            return hasUppercase && hasNumber;
+            return hasUppercase && hasNumber && hasLength;
         }
     }
 

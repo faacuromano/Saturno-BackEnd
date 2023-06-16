@@ -47,7 +47,7 @@ public class TurnoService
     {
         // Consulta base para todos los casos
         var query = _context.Turnos
-            .Where(p => p.IdProfesionalesNavigation.IdUsuariosNavigation.Username == username)
+            .Where(p => p.IdProfesionalesNavigation.IdUsuariosNavigation.Username == username || p.IdClientesNavigation.IdUsuariosNavigation.Username == username)
             .Select(t => new TurnoDtoOut
             {
                 NombreCliente = t.IdClientesNavigation.IdUsuariosNavigation.Nombre + " " + t.IdClientesNavigation.IdUsuariosNavigation.Apellido,

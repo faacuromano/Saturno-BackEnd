@@ -132,7 +132,6 @@ public class ProfesionalService
             profesionalNuevo.IdUsuariosNavigation.Pass = PH.hashPassword(profesionalNuevo.IdUsuariosNavigation.Pass);
             profesionalNuevo.IdUsuariosNavigation.Nombre = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Nombre);
             profesionalNuevo.IdUsuariosNavigation.Apellido = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Apellido);
-            profesionalNuevo.IdUsuariosNavigation.FechaNacimiento = FP.ConvertirFecha(FP.FechaParse(profesionalNuevo.IdUsuariosNavigation.FechaNacimiento));
             profesionalNuevo.EstadoSub = false;
             profesionalNuevo.IdUsuariosNavigation.TipoCuenta = "P";
             profesionalNuevo.IdUsuariosNavigation.CreacionCuenta = DateTime.Today;
