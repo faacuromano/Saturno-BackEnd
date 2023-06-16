@@ -13,7 +13,7 @@ public partial class TurnoDtoOut
 
     public decimal Monto { get; set; }
 
-    public string FechaTurno { get; set; } = null!;
+    public DateTime FechaTurno { get; set; }
 
     public TimeSpan? HoraTurno { get; set; }
 

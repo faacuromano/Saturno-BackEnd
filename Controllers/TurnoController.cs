@@ -24,9 +24,9 @@ public class TurnoController : ControllerBase
     }
 
     [HttpGet("/turnosDe/{username}")]
-    public async Task<ActionResult<IEnumerable<TurnoDtoOut?>>> GetByProfesional(string username)
+    public async Task<ActionResult<IEnumerable<TurnoDtoOut?>>> GetByProfesional(string username, int estado)
     {
-        var turno = await _service.GetByProfesional(username);
+        var turno = await _service.GetByProfesional(username, estado);
 
         if (turno is not null)
         {

@@ -21,6 +21,8 @@ public partial class Turno
 
     public string? Observaciones { get; set; }
 
+    public string? Estado { get; set; }
+
     [JsonIgnore]
     public virtual Cliente IdClientesNavigation { get; set; } = null!;
 

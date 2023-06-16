@@ -28,10 +28,6 @@ public partial class SaturnoV2Context : DbContext
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=Saturno_V2;Trusted_connection=true;TrustServerCertificate=True");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Administrador>(entity =>
@@ -91,10 +87,9 @@ public partial class SaturnoV2Context : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("direccion");
-            entity.Property(e => e.EstadoSubscripcion)
-                .HasMaxLength(30)
-                .IsUnicode(false)
-                .HasColumnName("estado_subscripcion");
+            entity.Property(e => e.EstadoSub)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("estadoSub");
             entity.Property(e => e.FotoBanner)
                 .HasMaxLength(350)
                 .IsUnicode(false)
@@ -150,6 +145,11 @@ public partial class SaturnoV2Context : DbContext
             entity.ToTable("Turno");
 
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Estado)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('pendiente')")
+                .HasColumnName("estado");
             entity.Property(e => e.FechaTurno)
                 .HasColumnType("date")
                 .HasColumnName("fechaTurno");
@@ -198,9 +198,7 @@ public partial class SaturnoV2Context : DbContext
                 .HasColumnType("date")
                 .HasColumnName("fechaNacimiento");
             entity.Property(e => e.FotoPerfil)
-                .HasMaxLength(350)
                 .IsUnicode(false)
-                .HasDefaultValueSql("('https://assets.objkt.media/file/assets-003/QmZxEd5SGRHBjXJhpeGxkKoPc8thXRZ8XchavHXUq23Mbs/artifact')")
                 .HasColumnName("fotoPerfil");
             entity.Property(e => e.Mail)
                 .HasMaxLength(50)

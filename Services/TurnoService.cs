@@ -33,7 +33,7 @@ public class TurnoService
             Monto = t.IdServiciosNavigation.Precio,
             Observaciones = t.Observaciones,
             HoraTurno = t.HoraTurno,
-            FechaTurno = FP.FechaParse(t.FechaTurno)
+            FechaTurno = t.FechaTurno
         }).ToListAsync();
 
     }
@@ -43,29 +43,62 @@ public class TurnoService
         return await _context.Turnos.FindAsync(id);
     }
 
-    public async Task<IEnumerable<TurnoDtoOut?>> GetByProfesional(string username)
+    public async Task<IEnumerable<object?>> GetByProfesional(string username, int estado)
     {
-        return await _context.Turnos
-            .Where(p => p.IdProfesionalesNavigation != null && p.IdProfesionalesNavigation.IdUsuariosNavigation.Username == username ||
-                         p.IdClientesNavigation != null && p.IdClientesNavigation.IdUsuariosNavigation.Username == username)
+        // Consulta base para todos los casos
+        var query = _context.Turnos
+            .Where(p => p.IdProfesionalesNavigation.IdUsuariosNavigation.Username == username)
             .Select(t => new TurnoDtoOut
             {
-                NombreCliente = t.IdClientesNavigation.IdUsuariosNavigation.Nombre
-                                + " "
-                                + t.IdClientesNavigation.IdUsuariosNavigation.Apellido,
-
-                NombreProfesional = t.IdProfesionalesNavigation.IdUsuariosNavigation.Nombre
-                                    + " "
-                                    + t.IdProfesionalesNavigation.IdUsuariosNavigation.Apellido,
-
+                NombreCliente = t.IdClientesNavigation.IdUsuariosNavigation.Nombre + " " + t.IdClientesNavigation.IdUsuariosNavigation.Apellido,
+                NombreProfesional = t.IdProfesionalesNavigation.IdUsuariosNavigation.Nombre + " " + t.IdProfesionalesNavigation.IdUsuariosNavigation.Apellido,
                 NombreServicio = t.IdServiciosNavigation.Nombre,
                 Monto = t.IdServiciosNavigation.Precio,
                 Observaciones = t.Observaciones,
                 HoraTurno = t.HoraTurno,
-                FechaTurno = FP.FechaParse(t.FechaTurno)
-            })
-            .ToListAsync();
+                FechaTurno = t.FechaTurno
+            });
+
+        switch (estado)
+        {
+            case 0:
+                // Caso 0: Todos los turnos sin filtrar
+                return await query.ToListAsync();
+
+            case 1:
+                // Caso 1: Turnos pasados (anterior a la fecha actual)
+                query = query.Where(t => t.FechaTurno < DateTime.Now);
+                return await query.ToListAsync();
+
+            case 2:
+                // Caso 2: Turnos futuros (posterior o igual a la fecha actual)
+                query = query.Where(t => t.FechaTurno >= DateTime.Now);
+                return await query.ToListAsync();
+
+            case 3:
+                // Caso 3: Turnos del día actual (exactamente igual a la fecha actual)
+                query = query.Where(t => t.FechaTurno == DateTime.Now);
+                return await query.ToListAsync();
+
+            default:
+                // Caso por defecto: Valor de estado inválido, se devuelve un mensaje de error
+                return new List<object>
+            {
+                new ErrorMessage("El parámetro 'estado' (" + estado + ") es inválido.")
+            };
+        };
+
     }
+    public class ErrorMessage
+    {
+        public string Message { get; set; }
+
+        public ErrorMessage(string message)
+        {
+            Message = message;
+        }
+    }
+
 
     public async Task<Turno?> Create(TurnoDtoIn turnoNuevoDTO)
     {

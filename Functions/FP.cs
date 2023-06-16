@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -11,6 +12,22 @@ namespace SATURNO_V2.Functions
             string fechaParseada = toParse.Substring(0, toParse.Length - 8);
 
             return fechaParseada;
+        }
+
+
+        public static DateTime ConvertirFecha(string fecha)
+        {
+            DateTime fechaConvertida;
+            if (DateTime.TryParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out fechaConvertida))
+            {
+                return fechaConvertida;
+            }
+            else
+            {
+                // La cadena de entrada no tiene el formato esperado
+                // Puedes manejar este caso según tus necesidades, por ejemplo, lanzando una excepción o devolviendo un valor predeterminado.
+                throw new ArgumentException("El formato de fecha no es válido.");
+            }
         }
     }
 }

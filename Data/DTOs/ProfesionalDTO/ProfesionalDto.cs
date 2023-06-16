@@ -17,8 +17,6 @@ public class ProfesionalDto
 
     public string? Ubicacion { get; set; }
 
-    public string Pass { get; set; } = null!;
-
     public string NumTelefono { get; set; } = null!;
 
     public string FechaNacimiento { get; set; }
@@ -30,6 +28,8 @@ public class ProfesionalDto
     public string CreacionCuenta { get; set; }
 
     public string? TipoCuenta { get; set; }
+
+    public bool EstadoSub { get; set; }
 
     public string? Descripcion { get; set; }
 

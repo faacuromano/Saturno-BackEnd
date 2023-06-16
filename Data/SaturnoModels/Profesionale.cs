@@ -19,8 +19,7 @@ public partial class Profesionale
 
     public string Direccion { get; set; } = null!;
 
-    [JsonIgnore]
-    public string? EstadoSubscripcion { get; set; }
+    public bool EstadoSub { get; set; }
 
     public string? Profesion { get; set; }
 

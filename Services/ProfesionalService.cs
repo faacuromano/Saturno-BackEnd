@@ -28,7 +28,6 @@ public class ProfesionalService
             Apellido = t.IdUsuariosNavigation.Apellido,
             Username = t.IdUsuariosNavigation.Username,
             Mail = t.IdUsuariosNavigation.Mail,
-            Pass = t.IdUsuariosNavigation.Pass,
             NumTelefono = t.IdUsuariosNavigation.NumTelefono,
             FechaNacimiento = FP.FechaParse(t.IdUsuariosNavigation.FechaNacimiento),
             FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
@@ -37,6 +36,7 @@ public class ProfesionalService
             TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
             Ubicacion = t.IdUsuariosNavigation.Ubicacion,
             Descripcion = t.Descripcion,
+            EstadoSub = t.EstadoSub,
             Profesion = t.Profesion,
             HorarioInicio = t.HorarioInicio,
             HorarioFinal = t.HorarioFinal,
@@ -54,7 +54,6 @@ public class ProfesionalService
             Apellido = t.IdUsuariosNavigation.Apellido,
             Username = t.IdUsuariosNavigation.Username,
             Mail = t.IdUsuariosNavigation.Mail,
-            Pass = t.IdUsuariosNavigation.Pass,
             NumTelefono = t.IdUsuariosNavigation.NumTelefono,
             FechaNacimiento = FP.FechaParse(t.IdUsuariosNavigation.FechaNacimiento),
             FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
@@ -80,6 +79,12 @@ public class ProfesionalService
     {
         return await _context.Profesionales.FindAsync(id);
     }
+    public async Task<Profesionale?> GetByUsernameToFunction(string username)
+    {
+        return await _context.Profesionales
+        .Where(p => p.IdUsuariosNavigation.Username == username)
+        .FirstOrDefaultAsync();
+    }
     #endregion
 
     #region Get by USERNAME
@@ -95,7 +100,6 @@ public class ProfesionalService
                 Username = t.IdUsuariosNavigation.Username,
                 Mail = t.IdUsuariosNavigation.Mail,
                 Ubicacion = t.IdUsuariosNavigation.Ubicacion,
-                Pass = t.IdUsuariosNavigation.Pass,
                 NumTelefono = t.IdUsuariosNavigation.NumTelefono,
                 FechaNacimiento = FP.FechaParse(t.IdUsuariosNavigation.FechaNacimiento),
                 FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
@@ -103,6 +107,7 @@ public class ProfesionalService
                 CreacionCuenta = FP.FechaParse(t.IdUsuariosNavigation.CreacionCuenta),
                 TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
                 Descripcion = t.Descripcion,
+                EstadoSub = t.EstadoSub,
                 Profesion = t.Profesion,
                 HorarioInicio = t.HorarioInicio,
                 HorarioFinal = t.HorarioFinal,
@@ -117,23 +122,33 @@ public class ProfesionalService
     #region Create
     public async Task<Profesionale?> Create(Profesionale profesionalNuevo)
     {
-        profesionalNuevo.IdUsuariosNavigation.Pass = PH.hashPassword(profesionalNuevo.IdUsuariosNavigation.Pass);
-        profesionalNuevo.IdUsuariosNavigation.Nombre = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Nombre);
-        profesionalNuevo.IdUsuariosNavigation.Apellido = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Apellido);
-        profesionalNuevo.IdUsuariosNavigation.TipoCuenta = "P";
-        profesionalNuevo.IdUsuariosNavigation.CreacionCuenta = DateTime.Today;
-        _context.Profesionales.Add(profesionalNuevo);
+        var validPassword = PH.verifyPassword(profesionalNuevo.IdUsuariosNavigation.Pass);
+        if (validPassword is false)
+        {
+            throw new Exception("La contaseña debe contener un numero y una mayuscula");
+        }
+        else
+        {
+            profesionalNuevo.IdUsuariosNavigation.Pass = PH.hashPassword(profesionalNuevo.IdUsuariosNavigation.Pass);
+            profesionalNuevo.IdUsuariosNavigation.Nombre = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Nombre);
+            profesionalNuevo.IdUsuariosNavigation.Apellido = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Apellido);
+            profesionalNuevo.EstadoSub = false;
+            profesionalNuevo.IdUsuariosNavigation.TipoCuenta = "P";
+            profesionalNuevo.IdUsuariosNavigation.CreacionCuenta = DateTime.Today;
+            _context.Profesionales.Add(profesionalNuevo);
 
-        await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-        return profesionalNuevo;
+            return profesionalNuevo;
+        }
     }
     #endregion
 
     #region Update
-    public async Task Update(int id, ProfesionalDtoUpdate profesionalDto)
+    public async Task Update(string username, ProfesionalDtoUpdate profesionalDto)
     {
-        var profesionalExistente = await GetByIdToFunction(id);
+        var profesionalExistente = await GetByUsernameToFunction(username);
+
 
         if (profesionalExistente is not null)
         {
@@ -143,11 +158,26 @@ public class ProfesionalService
             profesionalExistente.FotoBanner = profesionalDto.FotoBanner;
             profesionalExistente.Direccion = profesionalDto.Direccion;
             profesionalExistente.Profesion = profesionalDto.Profesion;
-            profesionalExistente.IdUsuarios = profesionalDto.IdUsuarios;
 
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task UpdateStatus(string username)
+    {
+        var profesionalToGet = await GetByUsername(username);
+        var id = profesionalToGet.IdUsuarios;
+        var usuarioExistente = await GetByIdToFunction(id);
+
+
+        if (usuarioExistente is not null)
+        {
+            usuarioExistente.EstadoSub = true;
+
+            await _context.SaveChangesAsync();
+        }
+    }
+
     #endregion
 
     #region Delete

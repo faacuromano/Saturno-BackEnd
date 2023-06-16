@@ -4,6 +4,8 @@ using SATURNO_V2.Data.SaturnoModels;
 using SATURNO_V2.Functions;
 using SATURNO_V2.Data.DTOs.ProfesionalDTO;
 using System.Globalization;
+using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SATURNO_V2.Controllers;
 
@@ -55,13 +57,13 @@ public class ProfesionalController : ControllerBase
         {
             var profesionalNuevo = await _service.Create(profesional);
 
-            if (profesionalNuevo is not null)
+            if (profesionalNuevo is null)
             {
-                return CreatedAtAction(nameof(GetByUsername), new { username = profesionalNuevo.IdUsuariosNavigation.Username }, profesionalNuevo);
+                return BadRequest("El objeto profesional se recibio como null.");
             }
             else
             {
-                return BadRequest("El objeto profesional se recibio como null.");
+                return CreatedAtAction(nameof(GetByUsername), new { username = profesionalNuevo.IdUsuariosNavigation.Username }, profesionalNuevo);
             }
         }
         else
@@ -71,17 +73,47 @@ public class ProfesionalController : ControllerBase
 
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, ProfesionalDtoUpdate profesionalDtoIn)
+    [HttpPut("{username}")]
+    [Authorize]
+    public async Task<IActionResult> Update(string username, ProfesionalDtoUpdate profesionalDtoIn)
     {
-        if (id != profesionalDtoIn.IdUsuarios)
+        // Verificar que el usuario actual coincide con el usuario del token
+        var currentUser = HttpContext.User.Identity.Name;
+        var profesionalUpdate = await _service.GetByUsernameToFunction(username);
+
+        if (profesionalUpdate is null)
         {
-            return BadRequest();
+            return NotFound("El usuario no existe");
         }
 
-        await _service.Update(id, profesionalDtoIn);
-        return Ok();
+        if (currentUser == username)
+        {
+            await _service.Update(username, profesionalDtoIn);
+            return Ok("Los cambios se han aplicado");
+        }
+        else
+        {
+            return Unauthorized("No podes realizar cambios sobre este usuario.");
+        }
+
     }
+
+    [HttpPut("/activarSubscripcion/{username}")]
+    public async Task<IActionResult> UpdateStatus(string username)
+    {
+        var usuarioUpdate = await _service.GetByUsername(username);
+
+        if (usuarioUpdate is null)
+        {
+            return NotFound("El usuario no existe");
+        }
+        else
+        {
+            await _service.UpdateStatus(username);
+            return Ok("Cuenta activada exitosamente!");
+        }
+    }
+
 
     [HttpDelete]
     public async Task<IActionResult> Delete(int id)
