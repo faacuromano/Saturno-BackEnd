@@ -82,13 +82,13 @@ public class ClienteController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(string username)
     {
-        var clienteDelete = await _service.GetByIdToFunction(id);
+        var clienteDelete = await _service.GetByUsernameToFunction(username);
 
         if (clienteDelete is not null)
         {
-            await _service.Delete(id);
+            await _service.Delete(username);
             return Ok();
         }
         else

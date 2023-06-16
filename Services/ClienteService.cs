@@ -102,10 +102,10 @@ public class ClienteService
         }
     }
 
-    public async Task Delete(int id)
+    public async Task Delete(string username)
     {
-        var ClieteToDelete = await GetByIdToFunction(id);
-        var usuarioDelete = await _context.Usuarios.FindAsync(id);
+        var ClieteToDelete = await GetByUsernameToFunction(username);
+        var usuarioDelete = await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == username);
 
         if (ClieteToDelete is not null && usuarioDelete is not null)
         {
@@ -114,6 +114,13 @@ public class ClienteService
 
             await _context.SaveChangesAsync();
         }
+    }
+
+    public async Task<Cliente?> GetByUsernameToFunction(string username)
+    {
+        return await _context.Clientes
+        .Where(p => p.IdUsuariosNavigation.Username == username)
+        .FirstOrDefaultAsync();
     }
 
 }

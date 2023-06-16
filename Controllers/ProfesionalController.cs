@@ -116,13 +116,13 @@ public class ProfesionalController : ControllerBase
 
 
     [HttpDelete]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(string username)
     {
-        var profesionalDelete = await _service.GetByIdToFunction(id);
+        var profesionalDelete = await _service.GetByUsernameToFunction(username);
 
         if (profesionalDelete is not null)
         {
-            await _service.Delete(id);
+            await _service.Delete(username);
             return Ok();
         }
         else

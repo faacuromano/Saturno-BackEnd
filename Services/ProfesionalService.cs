@@ -132,6 +132,7 @@ public class ProfesionalService
             profesionalNuevo.IdUsuariosNavigation.Pass = PH.hashPassword(profesionalNuevo.IdUsuariosNavigation.Pass);
             profesionalNuevo.IdUsuariosNavigation.Nombre = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Nombre);
             profesionalNuevo.IdUsuariosNavigation.Apellido = NN.ConvertirNombre(profesionalNuevo.IdUsuariosNavigation.Apellido);
+            profesionalNuevo.IdUsuariosNavigation.FechaNacimiento = FP.ConvertirFecha(FP.FechaParse(profesionalNuevo.IdUsuariosNavigation.FechaNacimiento));
             profesionalNuevo.EstadoSub = false;
             profesionalNuevo.IdUsuariosNavigation.TipoCuenta = "P";
             profesionalNuevo.IdUsuariosNavigation.CreacionCuenta = DateTime.Today;
@@ -181,11 +182,11 @@ public class ProfesionalService
     #endregion
 
     #region Delete
-    public async Task Delete(int id)
+    public async Task Delete(string username)
     {
-        var serviciosDelete = await GetServiceToDelete(id);
-        var profesionalToDelete = await GetByIdToFunction(id);
-        var usuarioDelete = await GetUsuarioToDelete(id);
+        var serviciosDelete = await GetServiceToDelete(username);
+        var profesionalToDelete = await GetByUsernameToFunction(username);
+        var usuarioDelete = await GetUsuarioToDelete(username);
 
         if (profesionalToDelete is not null && usuarioDelete is not null)
         {
@@ -197,14 +198,14 @@ public class ProfesionalService
         }
     }
 
-    public async Task<Usuario?> GetUsuarioToDelete(int id)
+    public async Task<Usuario?> GetUsuarioToDelete(string username)
     {
-        return await _context.Usuarios.FindAsync(id);
+        return await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == username);
     }
-    public async Task<IEnumerable<Servicio>> GetServiceToDelete(int id)
+    public async Task<IEnumerable<Servicio>> GetServiceToDelete(string username)
     {
         return await _context.Servicios.Where(t => t.IdProfesionalNavigation != null &&
-        t.IdProfesionalNavigation.IdUsuariosNavigation.Id == id).ToListAsync();
+        t.IdProfesionalNavigation.IdUsuariosNavigation.Username == username).ToListAsync();
 
     }
 
