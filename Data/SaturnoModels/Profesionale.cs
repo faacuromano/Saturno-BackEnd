@@ -21,7 +21,7 @@ public partial class Profesionale
 
     public bool EstadoSub { get; set; }
 
-    public string? Profesion { get; set; }
+    public string Profesion { get; set; } = null!;
 
     public virtual Usuario IdUsuariosNavigation { get; set; } = null!;
 

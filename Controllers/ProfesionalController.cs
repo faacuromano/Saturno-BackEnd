@@ -78,7 +78,7 @@ public class ProfesionalController : ControllerBase
     public async Task<IActionResult> Update(string username, ProfesionalDtoUpdate profesionalDtoIn)
     {
         // Verificar que el usuario actual coincide con el usuario del token
-        var currentUser = HttpContext.User.Identity.Name;
+        var currentUser = HttpContext?.User?.Identity?.Name;
         var profesionalUpdate = await _service.GetByUsernameToFunction(username);
 
         if (profesionalUpdate is null)

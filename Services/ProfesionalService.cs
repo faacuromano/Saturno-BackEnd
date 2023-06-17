@@ -165,14 +165,13 @@ public class ProfesionalService
 
     public async Task UpdateStatus(string username)
     {
-        var profesionalToGet = await GetByUsername(username);
-        var id = profesionalToGet.IdUsuarios;
-        var usuarioExistente = await GetByIdToFunction(id);
+        var profesionalToGet = await GetByUsernameToFunction(username);
 
 
-        if (usuarioExistente is not null)
+        if (profesionalToGet is not null)
         {
-            usuarioExistente.EstadoSub = true;
+            var id = profesionalToGet.IdUsuarios;
+            profesionalToGet.EstadoSub = true;
 
             await _context.SaveChangesAsync();
         }
@@ -211,6 +210,8 @@ public class ProfesionalService
     #endregion
 
     #region Generar Horarios
+#nullable disable
+
     public async Task<IDictionary<DateTime, IEnumerable<string>>> GetHorariosDisponibles(string username, int id, DateTime fecha)
     {
         var profesional = await GetByUsername(username);
@@ -273,6 +274,8 @@ public class ProfesionalService
 
         return horarios;
     }
+#nullable restore
+
 
     public async Task<Servicio?> GetServicio(int id)
     {

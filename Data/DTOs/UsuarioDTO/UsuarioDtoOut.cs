@@ -17,8 +17,9 @@ public class UsuarioDtoOut
 
     public string NumTelefono { get; set; } = null!;
 
-    public string FechaNacimiento { get; set; }
+    public string FechaNacimiento { get; set; } = null!;
 
     public string? FotoPerfil { get; set; }
 
 }
+

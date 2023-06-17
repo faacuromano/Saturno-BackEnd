@@ -17,7 +17,7 @@ public partial class Usuario
 
     public string Mail { get; set; } = null!;
 
-    public string? Ubicacion { get; set; }
+    public string Ubicacion { get; set; } = null!;
 
     public string NumTelefono { get; set; } = null!;
 

@@ -22,5 +22,5 @@ public partial class UsuarioLoginDto
 
     public string? FotoPerfil { get; set; }
 
-    public string? TipoCuenta { get; set; }
+    public string TipoCuenta { get; set; } = null!;
 }

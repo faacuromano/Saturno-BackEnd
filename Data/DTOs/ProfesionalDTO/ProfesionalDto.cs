@@ -19,13 +19,13 @@ public class ProfesionalDto
 
     public string NumTelefono { get; set; } = null!;
 
-    public string FechaNacimiento { get; set; }
+    public string FechaNacimiento { get; set; } = null!;
 
     public string? FotoPerfil { get; set; }
 
     public bool? Verificado { get; set; }
 
-    public string CreacionCuenta { get; set; }
+    public string CreacionCuenta { get; set; } = null!;
 
     public string? TipoCuenta { get; set; }
 
