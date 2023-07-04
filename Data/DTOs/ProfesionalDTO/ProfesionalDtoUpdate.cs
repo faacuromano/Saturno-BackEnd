@@ -18,7 +18,7 @@ public class ProfesionalDtoUpdate
 
     public string Direccion { get; set; } = null!;
 
-    public string? Profesion { get; set; }
+    public string Profesion { get; set; } = null!;
 
     [JsonIgnore]
     public virtual Usuario? IdUsuariosNavigation { get; set; } = null!;

@@ -34,6 +34,7 @@ public class ServicioService
     {
         return await _context.Servicios.FindAsync(id);
     }
+
     public async Task<Servicio?> GetById(int id)
     {
         return await _context.Servicios
@@ -54,13 +55,19 @@ public class ServicioService
         }).ToListAsync();
     }
 
-    public async Task<Servicio?> Create(Servicio servicioNuevo)
+    public async Task<object?> Create(Servicio servicioNuevo)
     {
-        _context.Servicios.Add(servicioNuevo);
+        if (servicioNuevo.Precio > 0)
+        {
+            _context.Servicios.Add(servicioNuevo);
+            await _context.SaveChangesAsync();
+            return servicioNuevo;
 
-        await _context.SaveChangesAsync();
+        }
 
-        return servicioNuevo;
+
+        return new Exception("EL PRECIO DEBE SER MAYOR A CERO").Message;
+
     }
 
     public async Task Update(int id, Servicio servicioDto)
@@ -77,6 +84,7 @@ public class ServicioService
             await _context.SaveChangesAsync();
         }
     }
+
     public async Task Delete(int id)
     {
         var ususarioDelete = await GetByIdToFunction(id);

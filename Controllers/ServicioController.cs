@@ -38,7 +38,14 @@ public class ServicioController : ControllerBase
 
         if (servicioNuevo is not null)
         {
-            return Ok(servicioNuevo);
+            if (servicio.Precio <= 0)
+            {
+                return Ok(servicioNuevo);
+            }
+            else
+            {
+                return BadRequest("El precio no puede ser cero ni negativo");
+            }
         }
         else
         {
