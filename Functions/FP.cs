@@ -16,7 +16,7 @@ namespace SATURNO_V2.Functions
         public static DateTime ConvertirFecha(string fecha)
         {
             DateTime fechaConvertida;
-            if (DateTime.TryParseExact(fecha, "yyyy-MM-ddy", CultureInfo.InvariantCulture, DateTimeStyles.None, out fechaConvertida))
+            if (DateTime.TryParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out fechaConvertida))
             {
                 return fechaConvertida;
             }
