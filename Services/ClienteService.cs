@@ -29,12 +29,13 @@ public class ClienteService
             Mail = t.IdUsuariosNavigation.Mail,
             Pass = t.IdUsuariosNavigation.Pass,
             NumTelefono = t.IdUsuariosNavigation.NumTelefono,
-            FechaNacimiento = FP.FechaParse(t.IdUsuariosNavigation.FechaNacimiento),
+            FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento,
             FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
             Verificado = t.IdUsuariosNavigation.Verificado,
-            CreacionCuenta = FP.FechaParse(t.IdUsuariosNavigation.CreacionCuenta),
+            CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
             TipoCuenta = t.IdUsuariosNavigation.TipoCuenta,
             Ubicacion = t.IdUsuariosNavigation.Ubicacion
+
         }).ToListAsync();
 
     }
@@ -57,10 +58,10 @@ public class ClienteService
                 Mail = t.IdUsuariosNavigation.Mail,
                 Pass = t.IdUsuariosNavigation.Pass,
                 NumTelefono = t.IdUsuariosNavigation.NumTelefono,
-                FechaNacimiento = FP.FechaParse(t.IdUsuariosNavigation.FechaNacimiento),
+                FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento,
                 FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
                 Verificado = t.IdUsuariosNavigation.Verificado,
-                CreacionCuenta = FP.FechaParse(t.IdUsuariosNavigation.CreacionCuenta),
+                CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,
                 Ubicacion = t.IdUsuariosNavigation.Ubicacion,
                 TipoCuenta = t.IdUsuariosNavigation.TipoCuenta
             })

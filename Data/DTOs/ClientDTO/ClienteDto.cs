@@ -18,13 +18,13 @@ public class ClienteDto
 
     public string NumTelefono { get; set; } = null!;
 
-    public string FechaNacimiento { get; set; } = null!;
+    public DateTime FechaNacimiento { get; set; }
 
     public string? FotoPerfil { get; set; }
 
     public bool? Verificado { get; set; }
 
-    public string CreacionCuenta { get; set; } = null!;
+    public DateTime CreacionCuenta { get; set; }
 
     public string? TipoCuenta { get; set; }
 

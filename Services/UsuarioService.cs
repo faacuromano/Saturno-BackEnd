@@ -43,7 +43,7 @@ public class UsuarioService
             Mail = t.Mail,
             Username = t.Username,
             NumTelefono = t.NumTelefono,
-            FechaNacimiento = FP.FechaParse(t.FechaNacimiento),
+            FechaNacimiento = t.FechaNacimiento,
             Ubicacion = t.Ubicacion,
             FotoPerfil = t.FotoPerfil,
         })
@@ -61,7 +61,7 @@ public class UsuarioService
             usuarioExistente.Ubicacion = usuario.Ubicacion;
             usuarioExistente.NumTelefono = usuario.NumTelefono;
             usuarioExistente.FotoPerfil = usuario.FotoPerfil;
-            usuarioExistente.FechaNacimiento = FP.ConvertirFecha(usuario.FechaNacimiento);
+            usuarioExistente.FechaNacimiento = usuario.FechaNacimiento;
 
 
             await _context.SaveChangesAsync();
@@ -117,7 +117,7 @@ public class UsuarioService
                                 Username = t.Username,
                                 Mail = t.Mail,
                                 NumTelefono = t.NumTelefono,
-                                FechaNacimiento = FP.FechaParse(t.FechaNacimiento),
+                                FechaNacimiento = t.FechaNacimiento,
                                 FotoPerfil = t.FotoPerfil,
                                 Ubicacion = t.Ubicacion,
                                 TipoCuenta = t.TipoCuenta
