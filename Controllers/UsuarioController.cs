@@ -85,7 +85,7 @@ public class UsuarioController : ControllerBase
             return NotFound("El usuario no existe");
         }
 
-        if (currentUser == username || isAdmin)
+        if (currentUser == username || isAdmin == true)
         {
             await _service.Update(username, usuario);
             return Ok("Los cambios se han aplicado");
@@ -171,7 +171,7 @@ public class UsuarioController : ControllerBase
             return BadRequest("La contraseña debe contener 6 caracteres, un numero, y una mayuscula");
         }
 
-        if (currentUser != username || isAdmin is false)
+        if (currentUser != username && isAdmin is false)
         {
             return Unauthorized("No puedes realizar cambios sobre este usuario.");
         }
