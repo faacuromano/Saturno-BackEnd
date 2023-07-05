@@ -29,7 +29,7 @@ public class ClienteService
             Mail = t.IdUsuariosNavigation.Mail,
             Pass = t.IdUsuariosNavigation.Pass,
             NumTelefono = t.IdUsuariosNavigation.NumTelefono,
-            FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento,
+            FechaNacimiento = t.IdUsuariosNavigation.FechaNacimiento.Date,
             FotoPerfil = t.IdUsuariosNavigation.FotoPerfil,
             Verificado = t.IdUsuariosNavigation.Verificado,
             CreacionCuenta = t.IdUsuariosNavigation.CreacionCuenta,

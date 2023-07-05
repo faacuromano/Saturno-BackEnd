@@ -61,13 +61,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("Profesional", policy => policy.RequireClaim("TipoCuenta", "P"));
-    options.AddPolicy("Cliente", policy => policy.RequireClaim("TipoCuenta", "C"));
-    options.AddPolicy("Administador", policy => policy.RequireClaim("TipoCuenta", "A"));
-});
-
 var app = builder.Build();
 
 app.UseCors(builder =>
