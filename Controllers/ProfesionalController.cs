@@ -6,6 +6,7 @@ using SATURNO_V2.Data.DTOs.ProfesionalDTO;
 using System.Globalization;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace SATURNO_V2.Controllers;
 
@@ -15,9 +16,13 @@ namespace SATURNO_V2.Controllers;
 public class ProfesionalController : ControllerBase
 {
     private readonly ProfesionalService _service;
-    public ProfesionalController(ProfesionalService service)
+
+    private IConfiguration config;
+
+    public ProfesionalController(ProfesionalService service, IConfiguration config)
     {
         _service = service;
+        this.config = config;
     }
 
     [HttpGet]
@@ -86,7 +91,7 @@ public class ProfesionalController : ControllerBase
             return NotFound("El usuario no existe");
         }
 
-        if (currentUser == username)
+        if (currentUser == username || currentUser == "admin")
         {
             await _service.Update(username, profesionalDtoIn);
             return Ok("Los cambios se han aplicado");
@@ -116,18 +121,29 @@ public class ProfesionalController : ControllerBase
 
 
     [HttpDelete]
+    [Authorize]
     public async Task<IActionResult> Delete(string username)
     {
         var profesionalDelete = await _service.GetByUsernameToFunction(username);
+        var currentUser = HttpContext?.User?.Identity?.Name;
+        bool isAdmin = HttpContext?.User?.FindFirst(ClaimTypes.Actor)?.Value == "A";
 
-        if (profesionalDelete is not null)
+
+        if (currentUser == username || isAdmin)
         {
-            await _service.Delete(username);
-            return Ok();
+            if (profesionalDelete is not null)
+            {
+                await _service.Delete(username);
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
         else
         {
-            return NotFound();
+            return Unauthorized("No posees los permisos para ejecutar la acción");
         }
     }
 

@@ -35,6 +35,7 @@ public class UsuarioController : ControllerBase
     public async Task<ActionResult<UsuarioDtoOut>> GetByUsername(string username)
     {
         var currentUser = HttpContext?.User?.Identity?.Name;
+        bool isAdmin = HttpContext?.User?.FindFirst(ClaimTypes.Actor)?.Value == "A";
         var usuario = await _service.GetByUsername(username);
 
 
@@ -44,7 +45,7 @@ public class UsuarioController : ControllerBase
         }
         else
         {
-            if (currentUser == username)
+            if (currentUser == username || isAdmin)
             {
                 return usuario;
             }
@@ -76,6 +77,7 @@ public class UsuarioController : ControllerBase
     public async Task<IActionResult> Update(string username, UsuarioDtoIn usuario)
     {
         var currentUser = HttpContext?.User?.Identity?.Name;
+        bool isAdmin = HttpContext?.User?.FindFirst(ClaimTypes.Actor)?.Value == "A";
         var usuarioUpdate = await _service.GetByUsernameToFunction(username);
 
         if (usuarioUpdate is null)
@@ -83,7 +85,7 @@ public class UsuarioController : ControllerBase
             return NotFound("El usuario no existe");
         }
 
-        if (currentUser == username)
+        if (currentUser == username || isAdmin)
         {
             await _service.Update(username, usuario);
             return Ok("Los cambios se han aplicado");
@@ -155,6 +157,7 @@ public class UsuarioController : ControllerBase
     public async Task<IActionResult> UpdatePassword(string username, UsuarioUpdatePasswordDTO usuario)
     {
         var currentUser = HttpContext?.User?.Identity?.Name;
+        bool isAdmin = HttpContext?.User?.FindFirst(ClaimTypes.Actor)?.Value == "A";
         var usuarioUpdate = await _service.GetByUsernameToFunction(username);
         var oldPassword = PH.hashPassword(usuario.OldPass);
         var isValidPassword = PH.verifyPassword(usuario.NewPass);
@@ -168,7 +171,7 @@ public class UsuarioController : ControllerBase
             return BadRequest("La contraseña debe contener 6 caracteres, un numero, y una mayuscula");
         }
 
-        if (currentUser != username)
+        if (currentUser != username || isAdmin is false)
         {
             return Unauthorized("No puedes realizar cambios sobre este usuario.");
         }
@@ -182,15 +185,15 @@ public class UsuarioController : ControllerBase
             return BadRequest("La contraseña vieja no es correcta o las nuevas no coinciden");
         }
     }
-    #region TOKEN GENERATE
 #nullable disable
+    #region TOKEN GENERATE
     private string GenerateToken(UsuarioLoginDto usuario)
     {
         var claims = new[]
         {
                 new Claim(ClaimTypes.Name, usuario.Username),
                 new Claim(ClaimTypes.Email, usuario.Mail),
-                new Claim("TipoCuenta", usuario.TipoCuenta),
+                new Claim(ClaimTypes.Actor, usuario.TipoCuenta),
             };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetSection("JWT:Key").Value));
@@ -205,8 +208,8 @@ public class UsuarioController : ControllerBase
 
         return token;
     }
-#nullable restore
     #endregion
+#nullable restore
 
 
 }

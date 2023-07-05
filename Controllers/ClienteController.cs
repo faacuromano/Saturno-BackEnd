@@ -4,6 +4,8 @@ using SATURNO_V2.Data.SaturnoModels;
 using SATURNO_V2.Data.DTOs;
 using SATURNO_V2.Functions;
 using SATURNO_V2.Data.DTOs.ClientDto;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SATURNO_V2.Controllers;
 
@@ -13,9 +15,11 @@ namespace SATURNO_V2.Controllers;
 public class ClienteController : ControllerBase
 {
     private readonly ClienteService _service;
-    public ClienteController(ClienteService service)
+    private IConfiguration config;
+    public ClienteController(ClienteService service, IConfiguration config)
     {
         _service = service;
+        this.config = config;
     }
 
 
@@ -81,19 +85,29 @@ public class ClienteController : ControllerBase
 
     }
 
+    [Authorize]
     [HttpDelete]
     public async Task<IActionResult> Delete(string username)
     {
         var clienteDelete = await _service.GetByUsernameToFunction(username);
+        var currentUser = HttpContext?.User?.Identity?.Name;
+        bool isAdmin = HttpContext?.User?.FindFirst(ClaimTypes.Actor)?.Value == "A";
 
-        if (clienteDelete is not null)
+        if (currentUser == username || isAdmin)
         {
-            await _service.Delete(username);
-            return Ok();
+            if (clienteDelete is not null)
+            {
+                await _service.Delete(username);
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
         }
         else
         {
-            return NotFound();
+            return Unauthorized("No posees permisos para realizar la acción");
         }
     }
 
