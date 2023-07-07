@@ -71,9 +71,9 @@ namespace SATURNO_V2.Functions
             List<string> listaUbicacion = new List<string>()
             {
                 "Rosario",
-                "Arroyo seco",
+                "Arroyo Seco",
                 "Funes",
-                "Villa gobernador Galvez",
+                "Villa Gobernador Galvez",
                 "Roldan"
             };
 

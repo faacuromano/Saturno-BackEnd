@@ -185,6 +185,53 @@ public class UsuarioController : ControllerBase
             return BadRequest("La contraseña vieja no es correcta o las nuevas no coinciden");
         }
     }
+
+    [HttpPut("updatePassword/{username}/{codigo}")]
+    public async Task<IActionResult> UpdatePasswordRecovered(string username, UsuarioRecoveryPasswordDTO usuario, string codigo)
+    {
+        var usuarioUpdate = await _service.GetByUsernameToFunction(username);
+        var isValidPassword = PH.verifyPassword(usuario.NewPass);
+        var codigoVer = (codigo == usuarioUpdate.Pass.Substring(0, 10));
+
+        if (usuarioUpdate is null)
+        {
+            return NotFound("El usuario no existe");
+        }
+        else if (isValidPassword is false)
+        {
+            return BadRequest("La contraseña debe contener 6 caracteres, un numero, y una mayuscula");
+        }
+        else if (codigoVer is false)
+        {
+            return BadRequest("El codigo de recuperacion es incorrecto");
+        }
+        else if (usuario.NewPass == usuario.SameNew)
+        {
+            await _service.UpdatePassword(username, usuario);
+            return Ok("Contraseña cambiada con exito.");
+        }
+        else
+        {
+            return BadRequest("La contraseña vieja no es correcta o las nuevas no coinciden");
+        }
+    }
+
+    [HttpPut("recoveryPassword/{username}")]
+    public async Task<IActionResult> RecoveryPassword(string username)
+    {
+        var usuarioUpdate = await _service.GetByUsernameToFunction(username);
+
+        if (usuarioUpdate is null)
+        {
+            return NotFound("El usuario no existe");
+        }
+        else
+        {
+
+            return Ok("Aqui la contraseña: " + await _service.RecoveryPassword(username));
+        }
+    }
+
 #nullable disable
     #region TOKEN GENERATE
     private string GenerateToken(UsuarioLoginDto usuario)

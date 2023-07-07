@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using SATURNO_V2.Data;
-using SATURNO_V2.Data.DTOs;
 using SATURNO_V2.Data.DTOs.ServicioDTO;
 using SATURNO_V2.Data.SaturnoModels;
 
@@ -62,12 +61,11 @@ public class ServicioService
             _context.Servicios.Add(servicioNuevo);
             await _context.SaveChangesAsync();
             return servicioNuevo;
-
         }
-
-
-        return new Exception("EL PRECIO DEBE SER MAYOR A CERO").Message;
-
+        else
+        {
+            return new Exception("EL PRECIO DEBE SER MAYOR A CERO").Message;
+        }
     }
 
     public async Task Update(int id, Servicio servicioDto)

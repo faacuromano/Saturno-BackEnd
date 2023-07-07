@@ -93,6 +93,17 @@ public class UsuarioService
             await _context.SaveChangesAsync();
         }
     }
+    public async Task<object?> RecoveryPassword(string username)
+    {
+        var usuarioExistente = await GetByUsernameToFunction(username);
+
+        if (usuarioExistente is not null)
+        {
+            return usuarioExistente.Pass.Substring(0, 10);
+        }
+        return "El usuario indicado es NULL";
+
+    }
 
     public async Task UpdateVerificado(string username)
     {
@@ -101,6 +112,18 @@ public class UsuarioService
         if (usuarioExistente is not null)
         {
             usuarioExistente.Verificado = true;
+
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task UpdatePassword(string username, UsuarioRecoveryPasswordDTO usuario)
+    {
+        var usuarioExistente = await GetByUsernameToFunction(username);
+
+        if (usuarioExistente is not null)
+        {
+            usuarioExistente.Pass = PH.hashPassword(usuario.NewPass);
 
             await _context.SaveChangesAsync();
         }

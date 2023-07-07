@@ -15,3 +15,9 @@ public class UsuarioUpdatePasswordDTO
     public string SameNew { get; set; } = null!;
 
 }
+public class UsuarioRecoveryPasswordDTO
+{
+    public string NewPass { get; set; } = null!;
+    public string SameNew { get; set; } = null!;
+
+}

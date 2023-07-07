@@ -1,9 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using SATURNO_V2.Data;
-using SATURNO_V2.Data.DTOs;
 using SATURNO_V2.Data.DTOs.TurnoDTO;
 using SATURNO_V2.Data.SaturnoModels;
-using SATURNO_V2.Functions;
 
 namespace SATURNO_V2.Services;
 
@@ -104,8 +102,15 @@ public class TurnoService
     {
         var profesional = await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == turnoNuevoDTO.UsernameProfesional);
         var cliente = await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == turnoNuevoDTO.UsernameCliente);
+        var diaActual = turnoNuevoDTO.FechaTurno == DateTime.Now.Date;
+        bool noDisponible = false;
 
-        if (profesional is null || cliente is null)
+        if (diaActual)
+        {
+            noDisponible = turnoNuevoDTO.HoraTurno < DateTime.Now.TimeOfDay;
+        }
+
+        if (profesional is null || cliente is null || noDisponible is true)
         {
             return null; // O manejar el escenario de error de alguna otra forma
         }
@@ -122,6 +127,7 @@ public class TurnoService
         await _context.SaveChangesAsync();
 
         return turnoNuevo;
+
     }
 
     public async Task Delete(int id)

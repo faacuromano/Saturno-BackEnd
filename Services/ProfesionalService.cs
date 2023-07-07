@@ -21,7 +21,9 @@ public class ProfesionalService
     #region GetAll Y GetAll CUTED
     public async Task<IEnumerable<ProfesionalDto>> GetAll()
     {
-        return await _context.Profesionales.Select(t => new ProfesionalDto
+        return await _context.Profesionales
+        .Where(t => t.EstadoSub == true)
+        .Select(t => new ProfesionalDto
         {
             IdUsuarios = t.IdUsuariosNavigation.Id,
             Nombre = t.IdUsuariosNavigation.Nombre,
@@ -47,7 +49,9 @@ public class ProfesionalService
     }
     public async Task<IEnumerable<ProfesionalDto>> GetFour(int n)
     {
-        var professionalsToCut = await _context.Profesionales.Select(t => new ProfesionalDto
+        var professionalsToCut = await _context.Profesionales
+        .Where(t => t.EstadoSub == true)
+        .Select(t => new ProfesionalDto
         {
             IdUsuarios = t.IdUsuariosNavigation.Id,
             Nombre = t.IdUsuariosNavigation.Nombre,
@@ -243,6 +247,12 @@ public class ProfesionalService
 
                 // Eliminar los horarios ocupados de la lista de horarios disponibles
                 horariosDisponibles.RemoveAll(h => h >= horaInicioTurno && h < horaFinalTurno);
+
+                // Verificar si el turno es en el día actual y el horario es anterior al horario actual
+                if (fechaTurno == DateTime.Today && horaInicioTurno < DateTime.Now.TimeOfDay)
+                {
+                    horariosDisponibles.RemoveAll(h => h < DateTime.Now.TimeOfDay);
+                }
             }
         }
 
